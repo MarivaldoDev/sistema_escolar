@@ -1,19 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User
+from .models import CustomUser
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ("email", "role")  # não inclui senha
+class LoginForm(forms.Form):
+    registration_number = forms.CharField(max_length=8, widget=forms.TextInput(attrs={'placeholder': 'Digite seu número de matrícula'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Digite sua senha'}))
 
-    def clean_password2(self):
-        # Sobrescreve para não exigir confirmação de senha
-        return None
+    def clean(self):
+        cleaned_data = super().clean()
+        registration_number = cleaned_data.get("registration_number")
+        password = cleaned_data.get("password")
 
+        if not registration_number or not password:
+            raise forms.ValidationError("Por favor, preencha todos os campos.")
 
-class CustomUserChangeForm(UserChangeForm):
-    class Meta:
-        model = User
-        fields = ("email", "role", "registration_number")
+        return cleaned_data

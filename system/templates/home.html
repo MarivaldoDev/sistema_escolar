@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'global/css/home.css' %}">
+  <title>Sistema de Notas</title>
+</head>
+<body>
+  <header>
+    <h1>Sistema de Notas Escolares</h1>
+  </header>
+
+  <nav>
+    <a href="/alunos">Alunos</a>
+    <a href="/disciplinas">Disciplinas</a>
+    <a href="/turmas">Turmas</a>
+    <a href="/resultados">Resultados</a>
+  </nav>
+
+  <div class="container">
+    <div class="intro">
+      <h2>Bem-vindo ao Sistema de Notas</h2>
+      <p>Acompanhe o desempenho dos alunos, visualize disciplinas, gerencie turmas e veja os resultados finais.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>📘 Alunos</h3>
+        <p>Cadastre e gerencie informações dos estudantes.</p>
+        <a href="/alunos" class="btn">Acessar</a>
+      </div>
+      <div class="card">
+        <h3>📚 Disciplinas</h3>
+        <p>Visualize todas as disciplinas disponíveis no sistema.</p>
+        <a href="/disciplinas" class="btn">Acessar</a>
+      </div>
+      <div class="card">
+        <h3>👩‍🏫 Turmas</h3>
+        <p>Organize os alunos em turmas e atribua professores.</p>
+        <a href="/turmas" class="btn">Acessar</a>
+      </div>
+      <div class="card">
+        <h3>✅ Resultados</h3>
+        <p>Acompanhe as médias finais e o status de aprovação.</p>
+        <a href="/resultados" class="btn">Acessar</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Sistema de Notas | Desenvolvido em Django + Python</p>
+  </footer>
+</body>
+</html>
