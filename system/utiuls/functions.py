@@ -1,15 +1,16 @@
 import random
 import string
+
 from django.core.mail import send_mail
 
 
 def generate_unique_registration_number():
     while True:
-        reg_num = ''.join(random.choices(string.digits, k=8))  # só números, 8 dígitos
+        reg_num = "".join(random.choices(string.digits, k=8))  # só números, 8 dígitos
         return reg_num
-    
+
 
 def send_welcome_email(user: str, email: str, registration_number: str):
     subject = "Bem-vindo ao Sistema Escolar"
     message = f"Olá {user},\n\nBem-vindo ao nosso sistema escolar!\nSua matrícula é {registration_number}. Guarde-a com cuidado!"
-    send_mail(subject, message, 'from@example.com', [email])
+    send_mail(subject, message, "from@example.com", [email])

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'global/css/turma_detail.css' %}">
+  <title>Alunos da Turma</title>
+</head>
+<body>
+  <header>
+    <h1>{{ turma.name }} - Detalhes</h1>
+    <nav>
+      <a href="/turmas/">Voltar</a>
+    </nav>
+  </header>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for aluno in turma.members.all %}
+        <tr>
+          <td>{{ aluno.username }}</td>
+          <td>
+            {% if aluno.status == "aprovado" %}
+              <span class="badge">Aprovado</span>
+            {% else %}
+              <span class="badge reprovado">Reprovado</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Sistema de Notas © 2025
+  </footer>
+</body>
+</html>

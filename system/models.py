@@ -1,8 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from .utiuls.functions import generate_unique_registration_number, send_welcome_email
+
+from .utiuls.functions import (generate_unique_registration_number,
+                               send_welcome_email)
 
 # senha_geral: Abc123@00
+
 
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
@@ -24,16 +27,23 @@ class CustomUser(AbstractUser):
         if not self.registration_number:
             self.registration_number = generate_unique_registration_number()
             while True:
-                if not CustomUser.objects.filter(registration_number=self.registration_number).exists():
+                if not CustomUser.objects.filter(
+                    registration_number=self.registration_number
+                ).exists():
                     break
                 self.registration_number = generate_unique_registration_number()
-        send_welcome_email(self.username, self.email, self.registration_number)
+        try:
+            send_welcome_email(self.username, self.email, self.registration_number)
+        except Exception as e:
+            pass
         super().save(*args, **kwargs)
 
 
 class Team(models.Model):
     name = models.CharField(max_length=50)
-    members = models.ManyToManyField("CustomUser", related_name="teams", limit_choices_to={'role': 'aluno'})
+    members = models.ManyToManyField(
+        "CustomUser", related_name="teams", limit_choices_to={"role": "aluno"}
+    )
     year = models.IntegerField()
 
     def __str__(self):
@@ -43,7 +53,10 @@ class Team(models.Model):
 class Subject(models.Model):
     name = models.CharField(max_length=50)
     teacher = models.ForeignKey(
-        "CustomUser", on_delete=models.CASCADE, related_name="subjects", limit_choices_to={'role': 'professor'}
+        "CustomUser",
+        on_delete=models.CASCADE,
+        related_name="subjects",
+        limit_choices_to={"role": "professor"},
     )
     team = models.ForeignKey("Team", on_delete=models.CASCADE, related_name="subjects")
 
@@ -52,7 +65,9 @@ class Subject(models.Model):
 
 
 class Grade(models.Model):
-    student = models.ForeignKey("CustomUser", on_delete=models.CASCADE, limit_choices_to={'role': 'aluno'})
+    student = models.ForeignKey(
+        "CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"}
+    )
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     value = models.FloatField()
     bimonthly = models.ForeignKey("Bimonthly", on_delete=models.CASCADE)

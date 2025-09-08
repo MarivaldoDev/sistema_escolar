@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #fff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    color: #2575fc;
+    font-size: 1.5rem;
+}
+
+.search-box {
+    margin: 20px auto;
+    max-width: 600px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.search-box input:focus {
+    border: 1px solid #2575fc;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
+}
+
+.card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #6a11cb;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+footer {
+    background: #fff;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.9rem;
+    color: #666;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}

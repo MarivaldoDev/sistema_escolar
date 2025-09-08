@@ -12,42 +12,47 @@
     <h1>Sistema de Notas Escolares</h1>
   </header>
 
-  <nav>
-    <a href="/alunos">Alunos</a>
-    <a href="/disciplinas">Disciplinas</a>
-    <a href="/turmas">Turmas</a>
-    <a href="/resultados">Resultados</a>
-  </nav>
+    <nav>
+      {% if user.is_authenticated %}   
+        <div class="auth-links">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+      {% else %}
+        <div class="auth-links">
+            <a href="{% url 'login' %}">Login</a> 
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+      {% endif %}
+    </nav>
 
   <div class="container">
     <div class="intro">
       <h2>Bem-vindo ao Sistema de Notas</h2>
       <p>Acompanhe o desempenho dos alunos, visualize disciplinas, gerencie turmas e veja os resultados finais.</p>
     </div>
-
-    <div class="cards">
-      <div class="card">
-        <h3>📘 Alunos</h3>
-        <p>Cadastre e gerencie informações dos estudantes.</p>
-        <a href="/alunos" class="btn">Acessar</a>
+    
+    {% if user.role == 'professor' %}
+      <div class="cards">
+          <div class="card">
+            <h3>📚 Disciplinas</h3>
+            <p>Visualize todas as disciplinas disponíveis no sistema.</p>
+            <a href="/disciplinas" class="btn">Acessar</a>
+          </div>
+          <div class="card">
+            <h3>👩‍🏫 Turmas</h3>
+            <p>Organize os alunos em turmas e atribua professores.</p>
+            <a href="/turmas" class="btn">Acessar</a>
+          </div>
       </div>
-      <div class="card">
-        <h3>📚 Disciplinas</h3>
-        <p>Visualize todas as disciplinas disponíveis no sistema.</p>
-        <a href="/disciplinas" class="btn">Acessar</a>
+    {% elif user.role == 'aluno' %}
+      <div class="cards">
+          <div class="card">
+            <h3>📝 Notas</h3>
+            <p>Confira suas notas e desempenho acadêmico.</p>
+            <a href="/notas" class="btn">Acessar</a>
+          </div>
       </div>
-      <div class="card">
-        <h3>👩‍🏫 Turmas</h3>
-        <p>Organize os alunos em turmas e atribua professores.</p>
-        <a href="/turmas" class="btn">Acessar</a>
-      </div>
-      <div class="card">
-        <h3>✅ Resultados</h3>
-        <p>Acompanhe as médias finais e o status de aprovação.</p>
-        <a href="/resultados" class="btn">Acessar</a>
-      </div>
-    </div>
-  </div>
+    {% endif %}
 
   <footer>
     <p>&copy; 2025 Sistema de Notas | Desenvolvido em Django + Python</p>
