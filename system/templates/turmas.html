@@ -10,25 +10,16 @@
 <body>
   <header>
     <h1>Turmas</h1>
-    <nav>
-      <a href="/logout/">Sair</a>
-    </nav>
   </header>
 
-  <div class="search-box">
-    <input type="text" placeholder="Pesquisar turma...">
-  </div>
-
-  <div class="container">
-    {% for turma in turmas %}
+  <main>
+    <div class="container">
+      {% for turma in turmas %}
         <div class="card">
-            <h3>{{ turma.name }}</h3>
+          <a href="{% url 'turma_detail' turma.id %}">{{ turma.name }}</a>
         </div>
-    {% endfor %}
-  </div>
-
-  <footer>
-    Sistema de Notas © 2025
-  </footer>
+      {% endfor %}
+    </div>
+  </main>
 </body>
 </html>

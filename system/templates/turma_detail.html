@@ -20,13 +20,15 @@
       <thead>
         <tr>
           <th>Nome</th>
+          <th>Matrícula</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody>
         {% for aluno in turma.members.all %}
         <tr>
-          <td>{{ aluno.username }}</td>
+          <td>{{ aluno.first_name }} {{ aluno.last_name }}</td>
+          <td>{{ aluno.registration_number }}</td>
           <td>
             {% if aluno.status == "aprovado" %}
               <span class="badge">Aprovado</span>

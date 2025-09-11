@@ -7,10 +7,11 @@ from .models import Bimonthly, CustomUser, Grade, Subject, Team
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
+    ordering = ("first_name", "last_name")
 
-    # Colunas exibidas na lista de usuários
     list_display = (
-        "username",
+        "first_name",
+        "last_name",
         "registration_number",
         "email",
         "role",
@@ -18,13 +19,12 @@ class CustomUserAdmin(UserAdmin):
         "is_active",
     )
 
-    # Campos visíveis na edição de um usuário
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("password",)}),
         (
             "Informações Pessoais",
             {"fields": ("first_name", "last_name", "email", "date_of_birth")},
-        ),  # <-- data de nascimento
+        ),
         (
             "Permissões",
             {
@@ -41,14 +41,14 @@ class CustomUserAdmin(UserAdmin):
         ("Datas Importantes", {"fields": ("last_login", "date_joined")}),
     )
 
-    # Campos visíveis ao criar um novo usuário
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
                 "fields": (
-                    "username",
+                    "first_name",
+                    "last_name",
                     "registration_number",
                     "role",
                     "email",
@@ -61,7 +61,36 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-admin.site.register(Team)
-admin.site.register(Subject)
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ("name", "year")
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user = request.user
+        if user.role == "professor" and not user.is_superuser:
+            return qs.filter(subjects__teacher=user).distinct()
+        return qs
+    
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ("name", "teacher", "team")
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user = request.user
+        if user.role == "professor" and not user.is_superuser:
+            return qs.filter(teacher=user)
+        return qs
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        user = request.user
+        if db_field.name == "teacher" and user.role == "professor" and not user.is_superuser:
+            kwargs["queryset"] = kwargs["queryset"].filter(id=user.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 admin.site.register(Grade)
 admin.site.register(Bimonthly)

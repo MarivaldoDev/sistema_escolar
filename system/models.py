@@ -3,8 +3,46 @@ from django.db import models
 
 from .utiuls.functions import (generate_unique_registration_number,
                                send_welcome_email)
+from django.contrib.auth.base_user import BaseUserManager
 
 # senha_geral: Abc123@00
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, registration_number, email=None, password=None, **extra_fields):
+        if not registration_number:
+            raise ValueError("O campo registration_number é obrigatório")
+        if not email:
+            raise ValueError("O campo email é obrigatório para usuários comuns")
+
+        email = self.normalize_email(email)
+        user = self.model(
+            registration_number=registration_number,
+            email=email,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, registration_number, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser precisa ter is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser precisa ter is_superuser=True.")
+
+        # aqui o email pode ser None
+        user = self.model(
+            registration_number=registration_number,
+            email=email,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
 
 class CustomUser(AbstractUser):
@@ -18,12 +56,16 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     USERNAME_FIELD = "registration_number"
-    REQUIRED_FIELDS = ["username", "email"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "email"]
+
+    objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.username} ({self.role}) - Matrícula: {self.registration_number}"
+        return f"{self.first_name} {self.last_name} ({self.role}) - Matrícula: {self.registration_number}"
 
     def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = f"user_{self.registration_number or generate_unique_registration_number()}"
         if not self.registration_number:
             self.registration_number = generate_unique_registration_number()
             while True:
@@ -33,7 +75,7 @@ class CustomUser(AbstractUser):
                     break
                 self.registration_number = generate_unique_registration_number()
         try:
-            send_welcome_email(self.username, self.email, self.registration_number)
+            send_welcome_email(self.first_name, self.email, self.registration_number)
         except Exception as e:
             pass
         super().save(*args, **kwargs)

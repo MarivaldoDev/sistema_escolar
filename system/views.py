@@ -33,10 +33,20 @@ def my_logout(request):
 
 
 def turmas(request):
-    turmas = Team.objects.all()
+    user = request.user
+    if user.role == 'professor' and not user.is_superuser:
+        turmas = Team.objects.filter(subjects__teacher=user).distinct()
+    else:   
+        turmas = Team.objects.all()
     return render(request, "turmas.html", {"turmas": turmas})
 
 
 def turma_detail(request, team_id: int):
-    turma = get_object_or_404(Team, id=team_id)
+    user = request.user
+    if user.role == "professor" and not user.is_superuser:
+        turma = get_object_or_404(Team, id=team_id, subjects__teacher=user)
+    else:
+        turma = get_object_or_404(Team, id=team_id)
+
     return render(request, "turma_detail.html", {"turma": turma})
+

@@ -1,84 +1,58 @@
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #111;
+    color: #e5e7eb;
 }
 
 header {
-    background: #fff;
-    padding: 15px 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #2a2a2a;
 }
 
 header h1 {
-    color: #2575fc;
+    margin: 0;
     font-size: 1.5rem;
-}
-
-.search-box {
-    margin: 20px auto;
-    max-width: 600px;
-    width: 100%;
-    padding: 0 20px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    outline: none;
-    transition: border 0.3s;
-}
-
-.search-box input:focus {
-    border: 1px solid #2575fc;
+    color: #f9fafb;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
     padding: 20px;
-    flex: 1;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 12px;
+    border-radius: 12px;
+    background: #1f1f1f;
+    border: 1px solid #2a2a2a;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: #2a2a2a;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    border-color: #3b82f6;
 }
 
-.card h3 {
-    margin-top: 0;
-    color: #6a11cb;
-}
-
-.card p {
-    margin: 5px 0;
+.card a {
+    display: inline-block;
     font-size: 0.95rem;
+    font-weight: 600;
+    color: #60a5fa;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
 }
 
-footer {
-    background: #fff;
-    text-align: center;
-    padding: 12px;
-    font-size: 0.9rem;
-    color: #666;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+.card a:hover,
+.card a:focus {
+    color: #93c5fd;
+    text-decoration: underline;
 }
