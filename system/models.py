@@ -5,6 +5,7 @@ from .utiuls.functions import (generate_unique_registration_number,
                                send_welcome_email)
 from django.contrib.auth.base_user import BaseUserManager
 
+
 # senha_geral: Abc123@00
 
 
@@ -48,6 +49,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     registration_number = models.CharField(max_length=8, unique=True, blank=True)
+    image_profile = models.ImageField(blank=True, upload_to="imagem_cadastro/%Y/%m/")
 
     ROLE_CHOICES = [
         ("aluno", "Aluno"),

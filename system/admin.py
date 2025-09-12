@@ -15,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
         "registration_number",
         "email",
         "role",
+        "image_profile",
         "is_staff",
         "is_active",
     )
@@ -37,7 +38,7 @@ class CustomUserAdmin(UserAdmin):
                 )
             },
         ),
-        ("Informações Extras", {"fields": ("registration_number", "role")}),
+        ("Informações Extras", {"fields": ("registration_number", "role", "image_profile")}),
         ("Datas Importantes", {"fields": ("last_login", "date_joined")}),
     )
 
@@ -55,6 +56,7 @@ class CustomUserAdmin(UserAdmin):
                     "password1",
                     "password2",
                     "date_of_birth",
+                    "image_profile",
                 ),
             },
         ),

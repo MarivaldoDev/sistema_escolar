@@ -1,77 +1,182 @@
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #2575fc, #6a11cb);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* ================================
+   Reset básico
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ================================
+   Corpo
+================================ */
+body {
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================
+   Cabeçalho
+================================ */
 header {
-    background: #fff;
-    padding: 15px 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: #2c3e50;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 header h1 {
-    color: #2575fc;
-    font-size: 1.5rem;
+  font-size: 20px;
 }
 
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+header nav a:hover {
+  background: #768491;
+}
+
+/* ================================
+   Container da tabela
+================================ */
 .table-container {
-    flex: 1;
-    padding: 30px;
-    overflow-x: auto;
+  flex: 1;
+  padding: 20px;
+  overflow-x: auto;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
-    padding: 14px 18px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+thead {
+  background: #34495e;
+  color: #fff;
 }
 
-th {
-    background: #6a11cb;
-    color: #fff;
-    font-size: 1rem;
+thead th {
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
 }
 
-tr:hover {
-    background: #f5f5f5;
+tbody td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  vertical-align: middle; /* mantém o conteúdo no meio da célula */
 }
 
+/* remove a linha da última TR inteira */
+tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+
+tbody tr:hover {
+  background: #f1f1f1;
+}
+
+/* ================================
+   Badges de status
+================================ */
 .badge {
-    display: inline-block;
-    padding: 4px 8px;
-    font-size: 0.8rem;
-    border-radius: 8px;
-    color: #fff;
-    background: #2575fc;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #27ae60;
+  color: #fff;
+  display: inline-block;
 }
 
 .badge.reprovado {
-    background: #e63946;
+  background: #e74c3c;
 }
 
+/* ================================
+   Coluna de ações
+================================ */
+.acoes {
+  display: flex;
+  justify-content: center;   /* centraliza horizontalmente */
+  align-items: center;       /* centraliza verticalmente */
+  gap: 10px;                 /* espaço entre os botões */
+  margin-top: 20px;
+  height: 100%;
+}
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;     /* centraliza o texto verticalmente */
+  justify-content: center; /* centraliza o texto horizontalmente */
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+
+.btn-lancar {
+  background: #4bd202ab;
+  color: #fff;
+}
+
+.btn-lancar:hover {
+  background: #0e7804e8;
+}
+
+.btn-editar {
+  background: #0c78d6;
+  color: #fff;
+}
+
+.btn-editar:hover {
+  background: #0f1550;
+}
+
+/* Foto do usuário */
+.foto-user {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+
+/* ================================
+   Rodapé
+================================ */
 footer {
-    background: #fff;
-    text-align: center;
-    padding: 12px;
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: auto;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 15px;
+  background: #2c3e50;
+  color: #fff;
+  font-size: 13px;
+  margin-top: auto;
 }

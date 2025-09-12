@@ -19,14 +19,23 @@
     <table>
       <thead>
         <tr>
+          <th>Foto</th>
           <th>Nome</th>
           <th>Matrícula</th>
           <th>Status</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         {% for aluno in turma.members.all %}
         <tr>
+          <td>
+            {% if aluno.image_profile %}
+              <img src="{{ aluno.image_profile.url }}" alt="Foto de {{ aluno.first_name }} {{ aluno.last_name }}" class="foto-user">
+            {% else %}
+              <img src="{% static 'global/images/default_user.png' %}" alt="Sem foto" class="foto-user">
+            {% endif %}
+          </td>
           <td>{{ aluno.first_name }} {{ aluno.last_name }}</td>
           <td>{{ aluno.registration_number }}</td>
           <td>
@@ -35,6 +44,10 @@
             {% else %}
               <span class="badge reprovado">Reprovado</span>
             {% endif %}
+          </td>
+          <td class="acoes">
+            <a href="" class="btn btn-lancar">Lançar Nota</a>
+            <a href="" class="btn btn-editar">Editar Nota</a>
           </td>
         </tr>
         {% endfor %}
