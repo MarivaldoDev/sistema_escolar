@@ -1,16 +1,17 @@
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from .utiuls.functions import (generate_unique_registration_number,
                                send_welcome_email)
-from django.contrib.auth.base_user import BaseUserManager
-
 
 # senha_geral: Abc123@00
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, registration_number, email=None, password=None, **extra_fields):
+    def create_user(
+        self, registration_number, email=None, password=None, **extra_fields
+    ):
         if not registration_number:
             raise ValueError("O campo registration_number é obrigatório")
         if not email:
@@ -18,15 +19,15 @@ class CustomUserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(
-            registration_number=registration_number,
-            email=email,
-            **extra_fields
+            registration_number=registration_number, email=email, **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, registration_number, email=None, password=None, **extra_fields):
+    def create_superuser(
+        self, registration_number, email=None, password=None, **extra_fields
+    ):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -37,9 +38,7 @@ class CustomUserManager(BaseUserManager):
 
         # aqui o email pode ser None
         user = self.model(
-            registration_number=registration_number,
-            email=email,
-            **extra_fields
+            registration_number=registration_number, email=email, **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)

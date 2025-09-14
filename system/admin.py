@@ -38,7 +38,10 @@ class CustomUserAdmin(UserAdmin):
                 )
             },
         ),
-        ("Informações Extras", {"fields": ("registration_number", "role", "image_profile")}),
+        (
+            "Informações Extras",
+            {"fields": ("registration_number", "role", "image_profile")},
+        ),
         ("Datas Importantes", {"fields": ("last_login", "date_joined")}),
     )
 
@@ -63,7 +66,6 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ("name", "year")
@@ -74,7 +76,7 @@ class TeamAdmin(admin.ModelAdmin):
         if user.role == "professor" and not user.is_superuser:
             return qs.filter(subjects__teacher=user).distinct()
         return qs
-    
+
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
@@ -89,7 +91,11 @@ class SubjectAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         user = request.user
-        if db_field.name == "teacher" and user.role == "professor" and not user.is_superuser:
+        if (
+            db_field.name == "teacher"
+            and user.role == "professor"
+            and not user.is_superuser
+        ):
             kwargs["queryset"] = kwargs["queryset"].filter(id=user.id)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 

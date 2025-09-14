@@ -1,8 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import LoginForm, GradeForm
-from .models import Team, CustomUser, Subject
+from .forms import GradeForm, LoginForm
+from .models import CustomUser, Subject, Team
 
 
 def home(request):
@@ -34,9 +34,9 @@ def my_logout(request):
 
 def turmas(request):
     user = request.user
-    if user.role == 'professor' and not user.is_superuser:
+    if user.role == "professor" and not user.is_superuser:
         turmas = Team.objects.filter(subjects__teacher=user).distinct()
-    else:   
+    else:
         turmas = Team.objects.all()
     return render(request, "turmas.html", {"turmas": turmas})
 
@@ -49,7 +49,9 @@ def turma_detail(request, team_id: int):
     else:
         turma = get_object_or_404(Team, id=team_id)
 
-    return render(request, "turma_detail.html", {"turma": turma, "subject": subject.name})
+    return render(
+        request, "turma_detail.html", {"turma": turma, "subject": subject.name}
+    )
 
 
 def add_grade(request, team_id: int, subject_name: str, student_id: int):
@@ -77,4 +79,3 @@ def add_grade(request, team_id: int, subject_name: str, student_id: int):
         "add_grade.html",
         {"form": form, "student": student, "subject": subject, "team": team},
     )
-
