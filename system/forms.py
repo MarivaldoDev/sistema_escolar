@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import CustomUser
+from .models import Grade
 
 
 class LoginForm(forms.Form):
@@ -21,3 +21,23 @@ class LoginForm(forms.Form):
             raise forms.ValidationError("Por favor, preencha todos os campos.")
 
         return cleaned_data
+
+
+class GradeForm(forms.ModelForm):
+    class Meta:
+        model = Grade
+        fields = ("value", "bimonthly")  # apenas os editáveis
+        widgets = {
+            "value": forms.NumberInput(
+                attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}
+            ),
+            "bimonthly": forms.Select(
+                attrs={"class": "form-control"},
+                choices=[
+                    (1, "1º Bimestre"),
+                    (2, "2º Bimestre"),
+                    (3, "3º Bimestre"),
+                    (4, "4º Bimestre"),
+                ],
+            ),
+        }
