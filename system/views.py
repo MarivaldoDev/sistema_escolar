@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import GradeForm, LoginForm
+from .forms import GradeForm, LoginForm, GradeUpdateForm
 from .models import CustomUser, Subject, Team
 
 
@@ -79,3 +79,27 @@ def add_grade(request, team_id: int, subject_name: str, student_id: int):
         "add_grade.html",
         {"form": form, "student": student, "subject": subject, "team": team},
     )
+
+
+def update_grade(request, team_id: int, subject_name: str, student_id: int):
+    student = get_object_or_404(CustomUser, id=student_id)
+    team = get_object_or_404(Team, id=team_id)
+    subject = get_object_or_404(Subject, name=subject_name)
+
+    if student not in team.members.all():
+        return redirect("turma_detail", team_id=team_id)
+    
+    grade_instance = student.grade_set.filter(subject=subject).first()
+
+    if request.method == "POST":
+        form = GradeUpdateForm(request.POST, instance=grade_instance)
+        if form.is_valid():
+            grade = form.save(commit=False)
+            grade.student = student
+            grade.subject = subject
+            grade.save()
+            return redirect("turma_detail", team_id=team_id)
+    else:
+        form = GradeUpdateForm(instance=grade_instance)
+
+    return render(request, "update_grade.html", {"form": form, "student": student, "subject": subject, "team": team})

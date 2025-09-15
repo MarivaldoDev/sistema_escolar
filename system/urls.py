@@ -13,4 +13,8 @@ urlpatterns = [
         views.add_grade,
         name="add_grade",
     ),
+    path("turmas/<int:team_id>/update_grade/<str:subject_name>/<int:student_id>/", 
+         views.update_grade, 
+         name="update_grade"
+    ),
 ]

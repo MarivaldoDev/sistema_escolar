@@ -41,3 +41,29 @@ class GradeForm(forms.ModelForm):
                 ],
             ),
         }
+
+class GradeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Grade
+        fields = ("value", "bimonthly")
+        widgets = {
+            "value": forms.NumberInput(
+                attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}
+            ),
+            "bimonthly": forms.Select(
+                attrs={"class": "form-control"},
+                choices=[
+                    (1, "1º Bimestre"),
+                    (2, "2º Bimestre"),
+                    (3, "3º Bimestre"),
+                    (4, "4º Bimestre"),
+                ],
+            ),
+        }
+
+        def save(self, commit=True):
+            grade = super().save(commit=False)
+            if commit:
+                grade.save()
+            return grade
+

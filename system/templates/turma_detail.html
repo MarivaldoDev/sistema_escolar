@@ -47,7 +47,7 @@
           </td>
           <td class="acoes">
             <a href="{% url 'add_grade' team_id=turma.id subject_name=subject student_id=aluno.id %}" class="btn btn-lancar">Lançar Nota</a>
-            <a href="" class="btn btn-editar">Editar Nota</a>
+            <a href="{% url 'update_grade' team_id=turma.id subject_name=subject student_id=aluno.id %}" class="btn btn-editar">Editar Nota</a>
           </td>
         </tr>
         {% endfor %}
