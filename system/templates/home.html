@@ -47,9 +47,9 @@
     {% elif user.role == 'aluno' %}
       <div class="cards">
           <div class="card">
-            <h3>📝 Notas</h3>
+            <h3>📝 Minhas Notas</h3>
             <p>Confira suas notas e desempenho acadêmico.</p>
-            <a href="/notas" class="btn">Acessar</a>
+            <a href="{% url 'my_grades' user.id %}" class="btn">Acessar</a>
           </div>
       </div>
     {% endif %}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Notas</title>
+</head>
+<body>
+    <h2>Notas de {{ student.first_name }} {{ student.last_name }} - Turma {{ team.name }}</h2>
+
+    <ul>
+        {% for item in subjects_with_grades %}
+            <li>
+                <strong>{{ item.subject.name }}</strong>
+                <ul>
+                {% for grade in item.grades %}
+                    <li>{{ grade.bimonthly }}: {{ grade.value }}</li>
+                {% empty %}
+                    <li>Sem notas ainda</li>
+                {% endfor %}
+                </ul>
+            </li>
+        {% empty %}
+            <li>Sem disciplinas cadastradas</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -17,4 +17,5 @@ urlpatterns = [
          views.update_grade, 
          name="update_grade"
     ),
+    path("alunos/minhas_notas/<int:student_id>/", views.my_grades, name="my_grades"),
 ]

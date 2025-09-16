@@ -26,7 +26,7 @@ class LoginForm(forms.Form):
 class GradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ("value", "bimonthly")  # apenas os editáveis
+        fields = ("value", "bimonthly")
         widgets = {
             "value": forms.NumberInput(
                 attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}

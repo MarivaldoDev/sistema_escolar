@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 
 from .forms import GradeForm, LoginForm, GradeUpdateForm
 from .models import CustomUser, Subject, Team
@@ -103,3 +103,48 @@ def update_grade(request, team_id: int, subject_name: str, student_id: int):
         form = GradeUpdateForm(instance=grade_instance)
 
     return render(request, "update_grade.html", {"form": form, "student": student, "subject": subject, "team": team})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CustomUser, Team, Subject, Grade
+
+
+def my_grades(request, student_id: int):
+    student = get_object_or_404(CustomUser, id=student_id)
+
+    # garante que o aluno só veja as próprias notas
+    if request.user != student:
+        return redirect("home")
+
+    # turma do aluno
+    team = Team.objects.filter(members=student).first()
+
+    if not team:
+        return render(request, "grades/my_grades.html", {
+            "student": student,
+            "team": None,
+            "subjects_with_grades": [],
+        })
+
+    # disciplinas da turma
+    subjects = team.subjects.all()
+
+    # notas do aluno
+    grades = Grade.objects.filter(student=student)
+
+    # organiza as notas por disciplina
+    subjects_with_grades = []
+    for subject in subjects:
+        subject_grades = grades.filter(subject=subject)
+        subjects_with_grades.append({
+            "subject": subject,
+            "grades": subject_grades
+        })
+
+    context = {
+        "student": student,
+        "team": team,
+        "subjects_with_grades": subjects_with_grades,
+    }
+
+    return render(request, "my_grades.html", context)
