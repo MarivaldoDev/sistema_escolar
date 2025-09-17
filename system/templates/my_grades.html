@@ -1,28 +1,51 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Notas</title>
+    <link rel="stylesheet" href="{% static 'global/css/my_grades.css' %}">
 </head>
 <body>
-    <h2>Notas de {{ student.first_name }} {{ student.last_name }} - Turma {{ team.name }}</h2>
+    <main class="container">
+        <header class="page-header">
+            <a href="{% url 'home' %}" class="back-btn">←</a>
+            <h1>Notas de {{ student.first_name }} {{ student.last_name }}</h1>
+            <p class="team-info">Turma: <span>{{ team.name }}</span></p>
+        </header>
 
-    <ul>
-        {% for item in subjects_with_grades %}
-            <li>
-                <strong>{{ item.subject.name }}</strong>
-                <ul>
-                {% for grade in item.grades %}
-                    <li>{{ grade.bimonthly }}: {{ grade.value }}</li>
+
+        <div class="search-box">
+            <form method="get" action="{% url 'search' %}">
+                <input type="search" name="q" placeholder="Pesquisar disciplina..." value="{{ search_value }}">
+                <input type="hidden" name="type" value="disciplinas">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <section class="grades-section">
+            <h2>Disciplinas</h2>
+            <ul class="subjects-list">
+                {% for item in subjects_with_grades %}
+                    <li class="subject-card">
+                        <h3>{{ item.subject.name }}</h3>
+                        <ul class="grades-list">
+                            {% for grade in item.grades %}
+                                <li>
+                                    <span class="bimonthly">{{ grade.bimonthly }}:</span>
+                                    <span class="grade">{{ grade.value }}</span>
+                                </li>
+                            {% empty %}
+                                <li class="empty">Sem notas ainda</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 {% empty %}
-                    <li>Sem notas ainda</li>
+                    <li class="empty">Sem disciplinas cadastradas</li>
                 {% endfor %}
-                </ul>
-            </li>
-        {% empty %}
-            <li>Sem disciplinas cadastradas</li>
-        {% endfor %}
-    </ul>
+            </ul>
+        </section>
+    </main>
 </body>
 </html>

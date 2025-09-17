@@ -65,6 +65,7 @@ class CustomUser(AbstractUser):
         return f"{self.first_name} {self.last_name} ({self.role}) - Matrícula: {self.registration_number}"
 
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
         if not self.username:
             self.username = f"user_{self.registration_number or generate_unique_registration_number()}"
         if not self.registration_number:
@@ -75,10 +76,11 @@ class CustomUser(AbstractUser):
                 ).exists():
                     break
                 self.registration_number = generate_unique_registration_number()
-        try:
-            send_welcome_email(self.first_name, self.email, self.registration_number)
-        except Exception as e:
-            pass
+        if is_new:
+            try:
+                send_welcome_email(self.first_name, self.email, self.registration_number)
+            except Exception as e:
+                pass
         super().save(*args, **kwargs)
 
 
@@ -117,7 +119,7 @@ class Grade(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.username} - {self.subject.name}: {self.value}"
+        return f"{self.student.first_name} {self.student.last_name} ({self.bimonthly}) - {self.subject.name}: {self.value}"
 
 
 class Bimonthly(models.Model):

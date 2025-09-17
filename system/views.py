@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 
 from .forms import GradeForm, LoginForm, GradeUpdateForm
-from .models import CustomUser, Subject, Team
+from .models import CustomUser, Subject, Team, Grade
+from django.db.models import Q
 
 
 def home(request):
@@ -30,6 +31,33 @@ def my_login(request):
 def my_logout(request):
     logout(request)
     return redirect("login")
+
+
+def search(request):
+    student = get_object_or_404(CustomUser, id=request.user.id)
+    team = Team.objects.filter(members=student).first()
+    subjects = team.subjects.all() if team else []
+    grades = Grade.objects.filter(student=student)
+
+    search_value = request.GET.get("q", "").strip()
+
+    if search_value:
+        subjects = subjects.filter(Q(name__icontains=search_value))
+
+    subjects_with_grades = []
+    for subject in subjects:
+        subject_grades = grades.filter(subject=subject)
+        subjects_with_grades.append({
+            "subject": subject,
+            "grades": subject_grades
+        })
+
+    return render(request, "my_grades.html", {
+        "student": student,
+        "team": team,
+        "subjects_with_grades": subjects_with_grades,
+        "search_value": search_value,
+    })
 
 
 def turmas(request):
@@ -105,34 +133,24 @@ def update_grade(request, team_id: int, subject_name: str, student_id: int):
     return render(request, "update_grade.html", {"form": form, "student": student, "subject": subject, "team": team})
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import CustomUser, Team, Subject, Grade
-
-
 def my_grades(request, student_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
 
-    # garante que o aluno só veja as próprias notas
     if request.user != student:
         return redirect("home")
 
-    # turma do aluno
     team = Team.objects.filter(members=student).first()
 
     if not team:
-        return render(request, "grades/my_grades.html", {
+        return render(request, "my_grades.html", {
             "student": student,
             "team": None,
             "subjects_with_grades": [],
         })
 
-    # disciplinas da turma
     subjects = team.subjects.all()
-
-    # notas do aluno
     grades = Grade.objects.filter(student=student)
 
-    # organiza as notas por disciplina
     subjects_with_grades = []
     for subject in subjects:
         subject_grades = grades.filter(subject=subject)

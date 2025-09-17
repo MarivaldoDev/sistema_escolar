@@ -140,11 +140,16 @@ nav {
 
 /* ===== RODAPÉ ===== */
 footer {
+    position: relative;   /* ou fixed se quiser grudado no final da tela */
+    left: 0;
+    right: 0;
+    width: 100%;         /* garante largura igual à viewport */
     text-align: center;
     padding: 20px;
-    margin-top: 60px;
+    margin-top: 160px;
     background: #4c1d95;
     color: #e9d5ff;
     font-size: 0.9rem;
     box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
 }
+
