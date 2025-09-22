@@ -15,10 +15,13 @@
   <main>
     <div class="container">
       {% for turma in turmas %}
-        <div class="card">
-          <a href="{% url 'turma_detail' turma.id %}">{{ turma.name }}</a>
-        </div>
-      {% endfor %}
+      <div class="card">
+        <a href="{% url 'turma_detail' team_id=turma.id subject_id=turma.subjects.first.id %}">
+          <h2>{{ turma.name }}</h2>
+        </a>
+      </div>
+    {% endfor %}
+
     </div>
   </main>
 </body>

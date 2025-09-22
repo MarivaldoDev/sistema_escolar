@@ -78,7 +78,9 @@ class CustomUser(AbstractUser):
                 self.registration_number = generate_unique_registration_number()
         if is_new:
             try:
-                send_welcome_email(self.first_name, self.email, self.registration_number)
+                send_welcome_email(
+                    self.first_name, self.email, self.registration_number
+                )
             except Exception as e:
                 pass
         super().save(*args, **kwargs)
@@ -103,10 +105,11 @@ class Subject(models.Model):
         related_name="subjects",
         limit_choices_to={"role": "professor"},
     )
-    team = models.ForeignKey("Team", on_delete=models.CASCADE, related_name="subjects")
+    team = models.ManyToManyField(Team, related_name="subjects")
 
     def __str__(self):
-        return f"{self.name} - ({self.team.name})"
+        turmas = ", ".join([t.name for t in self.team.all()])
+        return f"{self.name} - Turmas: {turmas}"
 
 
 class Grade(models.Model):

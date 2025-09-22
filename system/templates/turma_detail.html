@@ -9,12 +9,13 @@
 </head>
 <body>
   <header>
-    <h1>{{ turma.name }} - Detalhes ({{ subject }})</h1>
+    <h1>{{ turma.name }} - Detalhes ({{ subject.name }})</h1>
     <nav>
       <a href="/turmas/">Voltar</a>
     </nav>
   </header>
 
+  <!-- Tabela de alunos -->
   <div class="table-container">
     <table>
       <thead>
@@ -46,11 +47,15 @@
             {% endif %}
           </td>
           <td class="acoes">
-            <a href="{% url 'add_grade' team_id=turma.id subject_name=subject student_id=aluno.id %}" class="btn btn-lancar">Lançar Nota</a>
-            <a href="{% url 'update_grade' team_id=turma.id subject_name=subject student_id=aluno.id %}" class="btn btn-editar">Editar Nota</a>
+            <a href="{% url 'add_grade' team_id=turma.id subject_id=subject.id student_id=aluno.id %}" class="btn btn-lancar">
+              Lançar Nota
+            </a>
+            <a href="{% url 'update_grade' team_id=turma.id subject_id=subject.id student_id=aluno.id %}" class="btn btn-editar">
+              Editar Nota
+            </a>
           </td>
         </tr>
-        {% endfor %}
+      {% endfor %}
       </tbody>
     </table>
   </div>

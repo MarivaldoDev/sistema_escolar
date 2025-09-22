@@ -80,7 +80,12 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "teacher", "team")
+    list_display = ("name", "teacher", "listar_turmas")
+
+    def listar_turmas(self, obj):
+        return ", ".join([t.name for t in obj.team.all()])
+
+    listar_turmas.short_description = "Turmas"
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

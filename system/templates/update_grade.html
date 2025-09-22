@@ -10,7 +10,7 @@
 <body>
     <div class="form-container">
         <h1>Lançar Nota do Aluno</h1>
-        <form method="POST" action="{% url 'update_grade' team.id subject.name student.id %}">
+        <form method="POST" action="{% url 'update_grade' team.id subject.id student.id %}">
             {% csrf_token %}
             <div class="form-group">
                 <label>Aluno</label>

@@ -42,6 +42,7 @@ class GradeForm(forms.ModelForm):
             ),
         }
 
+
 class GradeUpdateForm(forms.ModelForm):
     class Meta:
         model = Grade
@@ -66,4 +67,3 @@ class GradeUpdateForm(forms.ModelForm):
             if commit:
                 grade.save()
             return grade
-

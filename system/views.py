@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
-
-from .forms import GradeForm, LoginForm, GradeUpdateForm
-from .models import CustomUser, Subject, Team, Grade
 from django.db.models import Q
+from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
+
+from .forms import GradeForm, GradeUpdateForm, LoginForm
+from .models import CustomUser, Grade, Subject, Team
 
 
 def home(request):
@@ -47,45 +47,52 @@ def search(request):
     subjects_with_grades = []
     for subject in subjects:
         subject_grades = grades.filter(subject=subject)
-        subjects_with_grades.append({
-            "subject": subject,
-            "grades": subject_grades
-        })
+        subjects_with_grades.append({"subject": subject, "grades": subject_grades})
 
-    return render(request, "my_grades.html", {
-        "student": student,
-        "team": team,
-        "subjects_with_grades": subjects_with_grades,
-        "search_value": search_value,
-    })
+    return render(
+        request,
+        "my_grades.html",
+        {
+            "student": student,
+            "team": team,
+            "subjects_with_grades": subjects_with_grades,
+            "search_value": search_value,
+        },
+    )
 
 
 def turmas(request):
     user = request.user
     if user.role == "professor" and not user.is_superuser:
         turmas = Team.objects.filter(subjects__teacher=user).distinct()
+        subject = Subject.objects.filter(teacher=user).first()
+        return render(request, "turmas.html", {"turmas": turmas, "subject": subject})
     else:
         turmas = Team.objects.all()
     return render(request, "turmas.html", {"turmas": turmas})
 
 
-def turma_detail(request, team_id: int):
+def turma_detail(request, team_id: int, subject_id: int):
     user = request.user
-    subject = Subject.objects.filter(teacher=user).first()
+
     if user.role == "professor" and not user.is_superuser:
         turma = get_object_or_404(Team, id=team_id, subjects__teacher=user)
+        subject = get_object_or_404(turma.subjects, id=subject_id, teacher=user)
     else:
         turma = get_object_or_404(Team, id=team_id)
+        subject = get_object_or_404(turma.subjects, id=subject_id)
 
     return render(
-        request, "turma_detail.html", {"turma": turma, "subject": subject.name}
+        request,
+        "turma_detail.html",
+        {"turma": turma, "subject": subject},
     )
 
 
-def add_grade(request, team_id: int, subject_name: str, student_id: int):
+def add_grade(request, team_id: int, subject_id: int, student_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
-    subject = get_object_or_404(Subject, name=subject_name)
+    subject = get_object_or_404(Subject, id=subject_id)
 
     if student not in team.members.all():
         return redirect("turma_detail", team_id=team_id)
@@ -109,14 +116,14 @@ def add_grade(request, team_id: int, subject_name: str, student_id: int):
     )
 
 
-def update_grade(request, team_id: int, subject_name: str, student_id: int):
+def update_grade(request, team_id: int, subject_id: int, student_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
-    subject = get_object_or_404(Subject, name=subject_name)
+    subject = get_object_or_404(Subject, id=subject_id)
 
     if student not in team.members.all():
         return redirect("turma_detail", team_id=team_id)
-    
+
     grade_instance = student.grade_set.filter(subject=subject).first()
 
     if request.method == "POST":
@@ -130,7 +137,11 @@ def update_grade(request, team_id: int, subject_name: str, student_id: int):
     else:
         form = GradeUpdateForm(instance=grade_instance)
 
-    return render(request, "update_grade.html", {"form": form, "student": student, "subject": subject, "team": team})
+    return render(
+        request,
+        "update_grade.html",
+        {"form": form, "student": student, "subject": subject, "team": team},
+    )
 
 
 def my_grades(request, student_id: int):
@@ -142,11 +153,15 @@ def my_grades(request, student_id: int):
     team = Team.objects.filter(members=student).first()
 
     if not team:
-        return render(request, "my_grades.html", {
-            "student": student,
-            "team": None,
-            "subjects_with_grades": [],
-        })
+        return render(
+            request,
+            "my_grades.html",
+            {
+                "student": student,
+                "team": None,
+                "subjects_with_grades": [],
+            },
+        )
 
     subjects = team.subjects.all()
     grades = Grade.objects.filter(student=student)
@@ -154,10 +169,7 @@ def my_grades(request, student_id: int):
     subjects_with_grades = []
     for subject in subjects:
         subject_grades = grades.filter(subject=subject)
-        subjects_with_grades.append({
-            "subject": subject,
-            "grades": subject_grades
-        })
+        subjects_with_grades.append({"subject": subject, "grades": subject_grades})
 
     context = {
         "student": student,
