@@ -41,7 +41,7 @@
           <div class="card">
             <h3>👩‍🏫 Minhas Turmas</h3>
             <p>Organize os alunos em turmas e atribua professores.</p>
-            <a href="/turmas" class="btn">Acessar</a>
+            <a href="{% url 'turmas' %}" class="btn">Acessar</a>
           </div>
       </div>
     {% elif user.role == 'aluno' %}

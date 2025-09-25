@@ -16,7 +16,7 @@
     <div class="container">
       {% for turma in turmas %}
       <div class="card">
-        <a href="{% url 'turma_detail' team_id=turma.id subject_id=turma.subjects.first.id %}">
+        <a href="{% url 'escolher_materia' team_id=turma.id %}">
           <h2>{{ turma.name }}</h2>
         </a>
       </div>
