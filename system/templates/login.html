@@ -5,12 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'global/css/login.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
   <title>Login - Sistema de Notas</title>
 </head>
 <body>
   <div class="login-box">
     <h2>Login</h2>
     <form method="POST" action="{% url 'login' %}">{% csrf_token %}
+      {% for message in messages %}
+          {% if 'error' in message.tags %}
+              <div class="error-message">{{ message }}</div>
+          {% else %}
+              <div class="success-message">{{ message }}</div>
+          {% endif %}
+      {% endfor %}
       {% for field in form %}
         <div>
           {{ field }}

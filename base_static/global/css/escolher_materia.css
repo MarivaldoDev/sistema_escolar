@@ -1,0 +1,70 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+}
+
+h2 span {
+    color: #0077b6;
+}
+
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.subject-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-decoration: none;
+    border-radius: 12px;
+    background: #f7fbff;
+    color: #0077b6;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.25s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.subject-card:hover {
+    background: #0077b6;
+    color: #fff;
+    border-color: #005f87;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 119, 182, 0.2);
+}
+
+.empty {
+    font-size: 1.1rem;
+    color: #888;
+}

@@ -1,20 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escolher Matéria</title>
+    <link rel="stylesheet" href="{% static 'global/css/escolher_materia.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
 </head>
 <body>
-    <h2>Escolha a matéria da turma {{ turma.name }}</h2>
-    <ul>
-    {% for subject in subjects %}
-        <li>
-        <a href="{% url 'turma_detail' team_id=turma.id subject_id=subject.id %}">
-            {{ subject.name }}
-        </a>
-        </li>
-    {% endfor %}
-    </ul>
+    <div class="container">
+        <h2>Escolha a matéria da turma <span>{{ turma.name }}</span></h2>
+
+        <div class="subjects-grid">
+            {% for subject in subjects %}
+                <a class="subject-card" href="{% url 'turma_detail' team_id=turma.id subject_id=subject.id %}">
+                    <div class="subject-name">{{ subject.name }}</div>
+                </a>
+            {% empty %}
+                <p class="empty">Nenhuma matéria disponível.</p>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

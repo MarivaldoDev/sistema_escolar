@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -25,6 +26,9 @@ def my_login(request):
         if user is not None:
             login(request, user)
             return redirect("home")
+    else:
+        for error in form.errors:
+            messages.error(request, form.errors[error])
     return render(request, "login.html", {"form": form})
 
 

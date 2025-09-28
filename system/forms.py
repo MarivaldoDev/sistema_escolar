@@ -19,6 +19,9 @@ class LoginForm(forms.Form):
 
         if not registration_number or not password:
             raise forms.ValidationError("Por favor, preencha todos os campos.")
+        
+        elif len(registration_number) < 8 or len(password) < 8:
+            raise forms.ValidationError("Número de matrícula e a senha devem ter 8 dígitos.")
 
         return cleaned_data
 

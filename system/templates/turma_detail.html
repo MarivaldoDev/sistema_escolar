@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'global/css/turma_detail.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
   <title>Alunos da Turma</title>
 </head>
 <body>
@@ -15,7 +16,6 @@
     </nav>
   </header>
 
-  <!-- Tabela de alunos -->
   <div class="table-container">
     <table>
       <thead>
@@ -34,7 +34,7 @@
             {% if aluno.image_profile %}
               <img src="{{ aluno.image_profile.url }}" alt="Foto de {{ aluno.first_name }} {{ aluno.last_name }}" class="foto-user">
             {% else %}
-              <img src="{% static 'global/images/default_user.png' %}" alt="Sem foto" class="foto-user">
+              <img src="{% static 'global/images/image_default.png' %}" alt="Sem foto" class="foto-user">
             {% endif %}
           </td>
           <td>{{ aluno.first_name }} {{ aluno.last_name }}</td>

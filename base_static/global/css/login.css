@@ -59,6 +59,20 @@ a {
     text-decoration: none;
 }
 
+.error-message {
+    background-color: rgba(207, 33, 33, 0.9);
+    color: #fff;
+    padding: 5px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+
+li{
+    list-style-type: none;
+}
+
 .btn:hover {
     opacity: 0.9;
 }
