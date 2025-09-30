@@ -60,12 +60,14 @@ a {
 }
 
 .error-message {
-    background-color: rgba(207, 33, 33, 0.9);
+    background-color: #f23538;
     color: #fff;
-    padding: 5px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+    padding: 6px 4px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    font-size: 1rem;
+    text-align: left;
+    animation: fadeIn 0.5s;
 }
 
 

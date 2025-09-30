@@ -10,7 +10,7 @@ def escolher_materia(request, team_id: int):
     turma = get_object_or_404(Team, id=team_id)
 
     if user.role == "professor" and not user.is_superuser:
-        subjects = turma.subjects.filter(teacher=user)
+        subjects = turma.subjects.filter(teachers=user)
     else:
         subjects = turma.subjects.all()
 
@@ -32,7 +32,7 @@ def turmas(request):
 
     if user.role == "professor" and not user.is_superuser:
         # Mostra só as turmas em que o professor leciona
-        turmas = Team.objects.filter(subjects__teacher=user).distinct()
+        turmas = Team.objects.filter(subjects__teachers=user).distinct()
     else:
         # Admin ou superuser vê todas
         turmas = Team.objects.all()
@@ -45,7 +45,7 @@ def turma_detail(request, team_id: int, subject_id: int):
     turma = get_object_or_404(Team, id=team_id)
 
     if user.role == "professor" and not user.is_superuser:
-        subject = get_object_or_404(turma.subjects.filter(teacher=user), id=subject_id)
+        subject = get_object_or_404(turma.subjects.filter(teachers=user), id=subject_id)
     else:
         subject = get_object_or_404(turma.subjects, id=subject_id)
 

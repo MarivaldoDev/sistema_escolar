@@ -33,7 +33,7 @@ def my_grades(request, student_id: int):
     context = {
         "student": student,
         "team": team,
-        "subjects_with_grades": subjects_with_grades,
+        "subjects_with_grades": sorted(subjects_with_grades, key=lambda x: x["subject"].name),
     }
 
     return render(request, "my_grades.html", context)

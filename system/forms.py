@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Grade
+from .models import Grade, CustomUser
 
 
 class LoginForm(forms.Form):
@@ -22,6 +22,9 @@ class LoginForm(forms.Form):
         
         elif len(registration_number) < 8 or len(password) < 8:
             raise forms.ValidationError("Número de matrícula e a senha devem ter 8 dígitos.")
+
+        elif not CustomUser.objects.filter(registration_number=registration_number).exists():
+            raise forms.ValidationError("Número de matrícula não cadastrado.")
 
         return cleaned_data
 

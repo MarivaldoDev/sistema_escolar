@@ -80,29 +80,33 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "teacher", "listar_turmas")
+    list_display = ("name", "listar_professores", "listar_turmas")
+
+    def listar_professores(self, obj):
+        return ", ".join([t.get_full_name() or t.username for t in obj.teachers.all()])
+    listar_professores.short_description = "Professores"
 
     def listar_turmas(self, obj):
         return ", ".join([t.name for t in obj.team.all()])
-
     listar_turmas.short_description = "Turmas"
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         user = request.user
         if user.role == "professor" and not user.is_superuser:
-            return qs.filter(teacher=user)
+            # agora filtra usando ManyToMany
+            return qs.filter(teachers=user).distinct()
         return qs
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
         user = request.user
         if (
-            db_field.name == "teacher"
+            db_field.name == "teachers"
             and user.role == "professor"
             and not user.is_superuser
         ):
             kwargs["queryset"] = kwargs["queryset"].filter(id=user.id)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 
 admin.site.register(Grade)

@@ -99,11 +99,11 @@ class Team(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
-    teacher = models.ForeignKey(
+    teachers = models.ManyToManyField(
         "CustomUser",
-        on_delete=models.CASCADE,
         related_name="subjects",
         limit_choices_to={"role": "professor"},
+        blank=True
     )
     team = models.ManyToManyField(Team, related_name="subjects")
 
