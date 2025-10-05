@@ -103,7 +103,7 @@ class Subject(models.Model):
         "CustomUser",
         related_name="subjects",
         limit_choices_to={"role": "professor"},
-        blank=True
+        blank=True,
     )
     team = models.ManyToManyField(Team, related_name="subjects")
 
@@ -113,7 +113,9 @@ class Subject(models.Model):
 
 
 class Grade(models.Model):
-    student = models.ForeignKey("CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"})
+    student = models.ForeignKey(
+        "CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"}
+    )
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True, blank=True)
     value = models.FloatField()

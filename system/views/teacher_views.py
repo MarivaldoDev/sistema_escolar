@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import CustomUser, Subject, Team, Grade
+from system.models import CustomUser, Grade, Subject, Team
 from system.utiuls.functions import is_aproved
 
 
@@ -53,9 +53,7 @@ def turma_detail(request, team_id: int, subject_id: int):
 
     for aluno in alunos:
         grades_qs = Grade.objects.filter(
-            student=aluno,
-            subject=subject,
-            team=turma
+            student=aluno, subject=subject, team=turma
         ).order_by("bimonthly__number")
 
         grades = [g.value for g in grades_qs]
@@ -95,10 +93,7 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
 
             # Verifica se já existe uma nota lançada para o mesmo bimestre
             existing_grade = Grade.objects.filter(
-                student=student,
-                subject=subject,
-                team=team,
-                bimonthly=grade.bimonthly
+                student=student, subject=subject, team=team, bimonthly=grade.bimonthly
             ).first()
 
             if existing_grade:
@@ -118,7 +113,6 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
         "add_grade.html",
         {"form": form, "student": student, "subject": subject, "team": team},
     )
-
 
 
 def update_grade(request, team_id: int, subject_id: int, student_id: int):

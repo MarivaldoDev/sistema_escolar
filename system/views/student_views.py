@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+
 from system.models import CustomUser, Grade, Team
 from system.utiuls.functions import is_aproved
 
@@ -28,9 +29,7 @@ def my_grades(request, student_id: int):
     for subject in subjects:
         # ✅ agora filtrando por student, subject e team
         subject_grades = Grade.objects.filter(
-            student=student,
-            subject=subject,
-            team=team
+            student=student, subject=subject, team=team
         ).order_by("bimonthly__number")
 
         grade_values = [g.value for g in subject_grades]
@@ -43,18 +42,21 @@ def my_grades(request, student_id: int):
             aprovado = False
             media = None
 
-        subjects_with_grades.append({
-            "subject": subject,
-            "grades": subject_grades,
-            "status": "Aprovado" if aprovado else "Reprovado",
-            "media": media,
-        })
+        subjects_with_grades.append(
+            {
+                "subject": subject,
+                "grades": subject_grades,
+                "status": "Aprovado" if aprovado else "Reprovado",
+                "media": media,
+            }
+        )
 
     context = {
         "student": student,
         "team": team,
-        "subjects_with_grades": sorted(subjects_with_grades, key=lambda x: x["subject"].name),
+        "subjects_with_grades": sorted(
+            subjects_with_grades, key=lambda x: x["subject"].name
+        ),
     }
 
     return render(request, "my_grades.html", context)
-

@@ -84,10 +84,12 @@ class SubjectAdmin(admin.ModelAdmin):
 
     def listar_professores(self, obj):
         return ", ".join([t.get_full_name() or t.username for t in obj.teachers.all()])
+
     listar_professores.short_description = "Professores"
 
     def listar_turmas(self, obj):
         return ", ".join([t.name for t in obj.team.all()])
+
     listar_turmas.short_description = "Turmas"
 
     def get_queryset(self, request):

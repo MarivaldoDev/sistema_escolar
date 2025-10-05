@@ -1,5 +1,5 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -59,7 +59,9 @@ def search(request):
         {
             "student": student,
             "team": team,
-            "subjects_with_grades": sorted(subjects_with_grades, key=lambda x: x["subject"].name),
+            "subjects_with_grades": sorted(
+                subjects_with_grades, key=lambda x: x["subject"].name
+            ),
             "search_value": search_value,
         },
     )
