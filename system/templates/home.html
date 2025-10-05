@@ -35,13 +35,8 @@
     {% if user.role == 'professor' %}
       <div class="cards">
           <div class="card">
-            <h3>📚 Disciplinas</h3>
-            <p>Visualize todas as disciplinas disponíveis no sistema.</p>
-            <a href="/disciplinas" class="btn">Acessar</a>
-          </div>
-          <div class="card">
             <h3>👩‍🏫 Minhas Turmas</h3>
-            <p>Organize os alunos em turmas e atribua professores.</p>
+            <p>Tenha o controle sobre as turmas que você leciona.</p>
             <a href="{% url 'turmas' %}" class="btn">Acessar</a>
           </div>
       </div>

@@ -31,16 +31,31 @@
                 {% for item in subjects_with_grades %}
                     <li class="subject-card">
                         <h3>{{ item.subject.name }}</h3>
+                        
                         <ul class="grades-list">
                             {% for grade in item.grades %}
                                 <li>
                                     <span class="bimonthly">{{ grade.bimonthly }}:</span>
                                     <span class="grade">{{ grade.value }}</span>
                                 </li>
-                            {% empty %}
-                                <li class="empty">Sem notas ainda</li>
                             {% endfor %}
                         </ul>
+
+                        <p class="media">
+                            Média: 
+                            {% if item.media %}
+                                <strong>{{ item.media|floatformat:1 }}</strong>
+                            {% else %}
+                                <em>Sem média ainda</em>
+                            {% endif %}
+                        </p>
+                        <p class="status">
+                            {% if item.status == "Aprovado" %}
+                                <span class="badge aprovado">Aprovado ✅</span>
+                            {% else %}
+                                <span class="badge reprovado">Reprovado ❌</span>
+                            {% endif %}
+                        </p>
                     </li>
                 {% empty %}
                     <li class="empty">Sem disciplinas cadastradas</li>

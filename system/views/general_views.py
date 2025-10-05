@@ -59,7 +59,7 @@ def search(request):
         {
             "student": student,
             "team": team,
-            "subjects_with_grades": subjects_with_grades,
+            "subjects_with_grades": sorted(subjects_with_grades, key=lambda x: x["subject"].name),
             "search_value": search_value,
         },
     )

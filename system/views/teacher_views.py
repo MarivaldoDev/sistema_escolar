@@ -2,7 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import CustomUser, Subject, Team
+from system.models import CustomUser, Subject, Team, Grade
+from system.utiuls.functions import is_aproved
 
 
 def escolher_materia(request, team_id: int):
@@ -31,10 +32,8 @@ def turmas(request):
     user = request.user
 
     if user.role == "professor" and not user.is_superuser:
-        # Mostra só as turmas em que o professor leciona
         turmas = Team.objects.filter(subjects__teachers=user).distinct()
     else:
-        # Admin ou superuser vê todas
         turmas = Team.objects.all()
 
     return render(request, "turmas.html", {"turmas": turmas})
@@ -49,10 +48,31 @@ def turma_detail(request, team_id: int, subject_id: int):
     else:
         subject = get_object_or_404(turma.subjects, id=subject_id)
 
+    alunos = turma.members.all()
+    alunos_com_status = []
+
+    for aluno in alunos:
+        grades_qs = Grade.objects.filter(
+            student=aluno,
+            subject=subject,
+            team=turma
+        ).order_by("bimonthly__number")
+
+        grades = [g.value for g in grades_qs]
+        bimonthlys = [str(g.bimonthly) for g in grades_qs]
+
+        if grades:
+            aprovado = is_aproved(grades, bimonthlys)
+            aluno.status = "aprovado" if aprovado else "reprovado"
+        else:
+            aluno.status = "reprovado"
+
+        alunos_com_status.append(aluno)
+
     return render(
         request,
         "turma_detail.html",
-        {"turma": turma, "subject": subject},
+        {"turma": turma, "subject": subject, "alunos": alunos_com_status},
     )
 
 
@@ -61,8 +81,9 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
 
+    # Garante que o aluno realmente pertence à turma
     if student not in team.members.all():
-        return redirect("turma_detail", team_id=team_id)
+        return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
     if request.method == "POST":
         form = GradeForm(request.POST)
@@ -71,7 +92,23 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
             grade.student = student
             grade.subject = subject
             grade.team = team
-            grade.save()
+
+            # Verifica se já existe uma nota lançada para o mesmo bimestre
+            existing_grade = Grade.objects.filter(
+                student=student,
+                subject=subject,
+                team=team,
+                bimonthly=grade.bimonthly
+            ).first()
+
+            if existing_grade:
+                # Atualiza o valor da nota existente
+                existing_grade.value = grade.value
+                existing_grade.save()
+            else:
+                # Cria uma nova nota
+                grade.save()
+
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
     else:
         form = GradeForm()
@@ -81,6 +118,7 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
         "add_grade.html",
         {"form": form, "student": student, "subject": subject, "team": team},
     )
+
 
 
 def update_grade(request, team_id: int, subject_id: int, student_id: int):

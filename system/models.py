@@ -113,10 +113,9 @@ class Subject(models.Model):
 
 
 class Grade(models.Model):
-    student = models.ForeignKey(
-        "CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"}
-    )
+    student = models.ForeignKey("CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"})
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
+    team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True, blank=True)
     value = models.FloatField()
     bimonthly = models.ForeignKey("Bimonthly", on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
