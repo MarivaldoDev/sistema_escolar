@@ -110,8 +110,14 @@ tbody tr:hover {
 }
 
 .badge.reprovado {
-  background: #e74c3c;
+  background: #db3724;
 }
+
+.badge.analise {
+  background: #ddff1d;
+  color: #333;
+}
+
 
 /* ================================
    Coluna de ações

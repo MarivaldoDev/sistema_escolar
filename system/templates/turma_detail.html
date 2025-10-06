@@ -40,10 +40,14 @@
         <td>{{ aluno.first_name }} {{ aluno.last_name }}</td>
         <td>{{ aluno.registration_number }}</td>
         <td>
-          {% if aluno.status == "aprovado" %}
-            <span class="badge">Aprovado</span>
+          {% if bimonthlys < 4 %}
+            <span class="badge analise">Em análise</span>
           {% else %}
-            <span class="badge reprovado">Reprovado</span>
+            {% if aluno.status == "aprovado" %}
+              <span class="badge">Aprovado</span>
+            {% else %}
+              <span class="badge reprovado">Reprovado</span>
+            {% endif %}
           {% endif %}
         </td>
         <td class="acoes">

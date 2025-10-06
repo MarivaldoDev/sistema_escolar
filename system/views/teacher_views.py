@@ -70,7 +70,7 @@ def turma_detail(request, team_id: int, subject_id: int):
     return render(
         request,
         "turma_detail.html",
-        {"turma": turma, "subject": subject, "alunos": alunos_com_status},
+        {"turma": turma, "subject": subject, "alunos": alunos_com_status, "bimonthlys": len(bimonthlys)},
     )
 
 
