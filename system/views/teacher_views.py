@@ -1,10 +1,12 @@
+import datetime
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import CustomUser, Grade, Subject, Team, Attendance, AttendanceRecord
+from system.models import (Attendance, AttendanceRecord, CustomUser, Grade,
+                           Subject, Team)
 from system.utiuls.functions import is_aproved
-import datetime
 
 
 def escolher_materia(request, team_id: int):
@@ -71,7 +73,12 @@ def turma_detail(request, team_id: int, subject_id: int):
     return render(
         request,
         "turma_detail.html",
-        {"turma": turma, "subject": subject, "alunos": alunos_com_status, "bimonthlys": len(bimonthlys)},
+        {
+            "turma": turma,
+            "subject": subject,
+            "alunos": alunos_com_status,
+            "bimonthlys": len(bimonthlys),
+        },
     )
 
 
@@ -154,24 +161,26 @@ def fazer_chamada(request, team_id: int, subject_id: int):
         teacher=request.user,
         team=team,
         subject=subject,
-        date__exact=datetime.date.today()
+        date__exact=datetime.date.today(),
     )
 
     if request.method == "POST":
         for aluno in alunos:
             presente = request.POST.get(f"presente_{aluno.id}") == "on"
             AttendanceRecord.objects.update_or_create(
-                attendance=attendance,
-                student=aluno,
-                defaults={'present': presente}
+                attendance=attendance, student=aluno, defaults={"present": presente}
             )
-        return redirect('turma_detail', team_id=team.id, subject_id=subject.id)
+        return redirect("turma_detail", team_id=team.id, subject_id=subject.id)
 
     registros_existentes = {r.student_id: r.present for r in attendance.records.all()}
 
-    return render(request, 'chamada.html', {
-        'team': team,
-        'subject': subject,
-        'alunos': alunos,
-        'registros': registros_existentes,
-    })
+    return render(
+        request,
+        "chamada.html",
+        {
+            "team": team,
+            "subject": subject,
+            "alunos": alunos,
+            "registros": registros_existentes,
+        },
+    )

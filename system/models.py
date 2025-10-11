@@ -139,7 +139,7 @@ class Bimonthly(models.Model):
 
     def __str__(self):
         return f"{self.number}º Bimestre/{self.year}"
-    
+
 
 class Attendance(models.Model):
     teacher = models.ForeignKey(
@@ -164,4 +164,3 @@ class AttendanceRecord(models.Model):
 
     def __str__(self):
         return f"{self.student.first_name} - {'Presente' if self.present else 'Faltou'}"
-

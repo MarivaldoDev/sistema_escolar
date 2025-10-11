@@ -53,7 +53,9 @@ def search(request):
     max_bimonthlys = 0  # Adicione esta linha
 
     for subject in subjects:
-        subject_grades = grades.filter(subject=subject, team=team).order_by("bimonthly__number")
+        subject_grades = grades.filter(subject=subject, team=team).order_by(
+            "bimonthly__number"
+        )
         grade_values = [g.value for g in subject_grades]
         bimonthlys = [str(g.bimonthly) for g in subject_grades]
         if len(bimonthlys) > max_bimonthlys:
@@ -66,12 +68,14 @@ def search(request):
             aprovado = False
             media = None
 
-        subjects_with_grades.append({
-            "subject": subject,
-            "grades": subject_grades,
-            "status": "Aprovado" if aprovado else "Reprovado",
-            "media": media,
-        })
+        subjects_with_grades.append(
+            {
+                "subject": subject,
+                "grades": subject_grades,
+                "status": "Aprovado" if aprovado else "Reprovado",
+                "media": media,
+            }
+        )
 
     return render(
         request,

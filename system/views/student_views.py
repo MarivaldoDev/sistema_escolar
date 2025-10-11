@@ -57,7 +57,7 @@ def my_grades(request, student_id: int):
         "subjects_with_grades": sorted(
             subjects_with_grades, key=lambda x: x["subject"].name
         ),
-        "bimonthlys": len(bimonthlys)
+        "bimonthlys": len(bimonthlys),
     }
 
     return render(request, "my_grades.html", context)

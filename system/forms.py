@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import CustomUser, Grade, AttendanceRecord
+from .models import AttendanceRecord, CustomUser, Grade
 
 
 class LoginForm(forms.Form):
@@ -82,4 +82,4 @@ class GradeUpdateForm(forms.ModelForm):
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = AttendanceRecord
-        fields = ['present']
+        fields = ["present"]
