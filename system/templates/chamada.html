@@ -1,0 +1,36 @@
+{% load static %}
+{% load dict_utils %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'global/css/chamada.css' %}">
+    <title>Chamada</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Chamada - {{ team.name }} ({{ subject.name }})</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <table>
+            <tr>
+                <th>Aluno</th>
+                <th>Presente?</th>
+            </tr>
+            {% for aluno in alunos %}
+            <tr>
+                <td>{{ aluno.first_name }} {{ aluno.last_name }}</td>
+                <td>
+                <input type="checkbox" name="presente_{{ aluno.id }}"
+                        {% if registros|get_item:aluno.id %}checked{% endif %}>
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
+            <button type="submit">Salvar Chamada</button>
+        </form>
+        </div>
+</body>
+</html>

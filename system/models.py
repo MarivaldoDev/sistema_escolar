@@ -139,3 +139,29 @@ class Bimonthly(models.Model):
 
     def __str__(self):
         return f"{self.number}º Bimestre/{self.year}"
+    
+
+class Attendance(models.Model):
+    teacher = models.ForeignKey(
+        "CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "professor"}
+    )
+    team = models.ForeignKey("Team", on_delete=models.CASCADE)
+    subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chamada - {self.team.name} / {self.subject.name} ({self.date})"
+
+
+class AttendanceRecord(models.Model):
+    attendance = models.ForeignKey(
+        "Attendance", on_delete=models.CASCADE, related_name="records"
+    )
+    student = models.ForeignKey(
+        "CustomUser", on_delete=models.CASCADE, limit_choices_to={"role": "aluno"}
+    )
+    present = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.student.first_name} - {'Presente' if self.present else 'Faltou'}"
+

@@ -13,6 +13,7 @@
     <h1>{{ turma.name }} - Detalhes ({{ subject.name }})</h1>
     <nav>
       <a href="/turmas/">Voltar</a>
+      <a href="{% url 'fazer_chamada' team_id=turma.id subject_id=subject.id %}">Fazer chamada</a>
     </nav>
   </header>
 

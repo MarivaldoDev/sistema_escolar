@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import CustomUser, Grade, Subject, Team
+from system.models import CustomUser, Grade, Subject, Team, Attendance, AttendanceRecord
 from system.utiuls.functions import is_aproved
+import datetime
 
 
 def escolher_materia(request, team_id: int):
@@ -141,3 +142,36 @@ def update_grade(request, team_id: int, subject_id: int, student_id: int):
         "update_grade.html",
         {"form": form, "student": student, "subject": subject, "team": team},
     )
+
+
+def fazer_chamada(request, team_id: int, subject_id: int):
+    team = get_object_or_404(Team, id=team_id)
+    subject = get_object_or_404(Subject, id=subject_id)
+    alunos = team.members.all()
+
+    # Se o professor já fez a chamada hoje, mostramos o registro existente
+    attendance, created = Attendance.objects.get_or_create(
+        teacher=request.user,
+        team=team,
+        subject=subject,
+        date__exact=datetime.date.today()
+    )
+
+    if request.method == "POST":
+        for aluno in alunos:
+            presente = request.POST.get(f"presente_{aluno.id}") == "on"
+            AttendanceRecord.objects.update_or_create(
+                attendance=attendance,
+                student=aluno,
+                defaults={'present': presente}
+            )
+        return redirect('turma_detail', team_id=team.id, subject_id=subject.id)
+
+    registros_existentes = {r.student_id: r.present for r in attendance.records.all()}
+
+    return render(request, 'chamada.html', {
+        'team': team,
+        'subject': subject,
+        'alunos': alunos,
+        'registros': registros_existentes,
+    })

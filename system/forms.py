@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import CustomUser, Grade
+from .models import CustomUser, Grade, AttendanceRecord
 
 
 class LoginForm(forms.Form):
@@ -77,3 +77,9 @@ class GradeUpdateForm(forms.ModelForm):
             if commit:
                 grade.save()
             return grade
+
+
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = AttendanceRecord
+        fields = ['present']
