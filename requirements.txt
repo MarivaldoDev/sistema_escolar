@@ -2,10 +2,12 @@ asgiref==3.9.1
 black==25.1.0
 cfgv==3.4.0
 click==8.2.1
+coverage==7.10.7
 distlib==0.4.0
 Django==5.2.5
 filelock==3.19.1
 identify==2.6.13
+iniconfig==2.1.0
 isort==6.0.1
 mypy_extensions==1.1.0
 nodeenv==1.9.1
@@ -13,7 +15,12 @@ packaging==25.0
 pathspec==0.12.1
 pillow==11.3.0
 platformdirs==4.4.0
+pluggy==1.6.0
 pre_commit==4.3.0
+Pygments==2.19.2
+pytest==8.4.2
+pytest-cov==7.0.0
+pytest-django==4.11.1
 python-decouple==3.8
 PyYAML==6.0.2
 sqlparse==0.5.3

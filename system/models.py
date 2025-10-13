@@ -4,6 +4,7 @@ from django.db import models
 
 from .utiuls.functions import (generate_unique_registration_number,
                                send_welcome_email)
+from django.core.exceptions import ValidationError
 
 # senha_geral: Abc123@00
 
@@ -93,6 +94,11 @@ class Team(models.Model):
     )
     year = models.IntegerField()
 
+    def clean(self):
+        for member in self.members.all():
+            if member.role != "aluno":
+                raise ValidationError(f"{member} não pode ser adicionado — não é aluno.")
+
     def __str__(self):
         return f"{self.name} - {self.year}"
 
@@ -110,6 +116,11 @@ class Subject(models.Model):
     def __str__(self):
         turmas = ", ".join([t.name for t in self.team.all()])
         return f"{self.name} - Turmas: {turmas}"
+    
+    def clean(self):
+        for teacher in self.teachers.all():
+            if teacher.role != "professor":
+                raise ValidationError("Apenas usuários com papel de professor podem ser adicionados como professores.")
 
 
 class Grade(models.Model):
