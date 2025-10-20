@@ -27,6 +27,8 @@ def my_login(request):
         if user is not None:
             login(request, user)
             return redirect("home")
+        else:
+            messages.error(request, "Número de matrícula ou senha inválidos.")
     else:
         for error in form.errors:
             messages.error(request, form.errors[error])

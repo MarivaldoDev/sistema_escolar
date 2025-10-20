@@ -1,10 +1,10 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from .utiuls.functions import (generate_unique_registration_number,
                                send_welcome_email)
-from django.core.exceptions import ValidationError
 
 # senha_geral: Abc123@00
 
@@ -37,9 +37,10 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser precisa ter is_superuser=True.")
 
-        # aqui o email pode ser None
+        # permitir email None para criação via linha de comando, mas garantir valor não-NULL ao salvar
+        email_value = self.normalize_email(email) if email else ""
         user = self.model(
-            registration_number=registration_number, email=email, **extra_fields
+            registration_number=registration_number, email=email_value, **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -67,22 +68,21 @@ class CustomUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
-        if not self.username:
-            self.username = f"user_{self.registration_number or generate_unique_registration_number()}"
+        # Garantir primeiro um registration_number único, depois gerar username a partir dele.
         if not self.registration_number:
             self.registration_number = generate_unique_registration_number()
-            while True:
-                if not CustomUser.objects.filter(
-                    registration_number=self.registration_number
-                ).exists():
-                    break
+            while CustomUser.objects.filter(
+                registration_number=self.registration_number
+            ).exists():
                 self.registration_number = generate_unique_registration_number()
+        if not self.username:
+            self.username = f"user_{self.registration_number}"
         if is_new:
             try:
                 send_welcome_email(
                     self.first_name, self.email, self.registration_number
                 )
-            except Exception as e:
+            except Exception:
                 pass
         super().save(*args, **kwargs)
 
@@ -97,7 +97,9 @@ class Team(models.Model):
     def clean(self):
         for member in self.members.all():
             if member.role != "aluno":
-                raise ValidationError(f"{member} não pode ser adicionado — não é aluno.")
+                raise ValidationError(
+                    f"{member} não pode ser adicionado — não é aluno."
+                )
 
     def __str__(self):
         return f"{self.name} - {self.year}"
@@ -116,11 +118,13 @@ class Subject(models.Model):
     def __str__(self):
         turmas = ", ".join([t.name for t in self.team.all()])
         return f"{self.name} - Turmas: {turmas}"
-    
+
     def clean(self):
         for teacher in self.teachers.all():
             if teacher.role != "professor":
-                raise ValidationError("Apenas usuários com papel de professor podem ser adicionados como professores.")
+                raise ValidationError(
+                    "Apenas usuários com papel de professor podem ser adicionados como professores."
+                )
 
 
 class Grade(models.Model):
@@ -135,6 +139,12 @@ class Grade(models.Model):
 
     def __str__(self):
         return f"{self.student.first_name} {self.student.last_name} ({self.bimonthly}) - {self.subject.name}: {self.value}"
+
+    def clean(self):
+        if self.value < 0.0:
+            raise ValidationError("A nota não pode ser menor que 0.0.")
+        if self.value > 10.0:
+            raise ValidationError("A nota não pode ser maior que 10.0.")
 
 
 class Bimonthly(models.Model):

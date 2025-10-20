@@ -1,6 +1,7 @@
-from ..models import Team, CustomUser
-from django.core.exceptions import ValidationError
 import pytest
+from django.core.exceptions import ValidationError
+
+from ...models import CustomUser, Team
 
 
 @pytest.mark.django_db
@@ -17,7 +18,7 @@ def test_apenas_alunos_na_turma():
         email="aluno@example.com",
         registration_number="A1234567",
         role="aluno",
-        password="teste123"
+        password="teste123",
     )
     team = Team.objects.create(name="TDS A", year=2025)
     team.members.add(aluno)
@@ -35,7 +36,7 @@ def test_professor_nao_pode_ser_membro():
         email="prof@example.com",
         registration_number="P7654321",
         role="professor",
-        password="teste123"
+        password="teste123",
     )
     team = Team.objects.create(name="1ºA", year=2025)
 
