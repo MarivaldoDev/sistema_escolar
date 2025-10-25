@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar Nota</title>
+    <title>Atualizar Nota</title>
     <link rel="stylesheet" href="{% static 'global/css/add_grade.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
 </head>
 <body>
     <div class="form-container">
-        <h1>Lançar Nota do Aluno</h1>
-        <form method="POST" action="{% url 'update_grade' team.id subject.id student.id %}">
+        <h1>Atualizar Nota do Aluno</h1>
+        <form method="POST" action="{% if bimonthly %}{% url 'update_grade' team.id subject.id student.id bimonthly.id %}{% else %}{% url 'update_grade' team.id subject.id student.id %}{% endif %}">
             {% csrf_token %}
             <div class="form-group">
                 <label>Aluno</label>

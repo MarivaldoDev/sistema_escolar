@@ -13,6 +13,13 @@
         <h1>Lançar Nota do Aluno</h1>
         <form method="POST" action="{% url 'add_grade' team.id subject.id student.id %}">
             {% csrf_token %}
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    <div class="error-message">{{ message }}</div>
+                {% else %}
+                    <div class="success-message">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
             <div class="form-group">
                 <label>Aluno</label>
                 <input type="text" value="{{ student.get_full_name }}" readonly class="readonly-info">

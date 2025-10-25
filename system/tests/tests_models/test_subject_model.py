@@ -9,7 +9,7 @@ def test_str_method():
     team = Team.objects.create(name="TDS A", year=2025)
     subject = Subject.objects.create(name="Matemática")
     subject.team.add(team)
-    assert str(subject) == "Matemática - Turmas: TDS A"
+    assert str(subject) == "Matemática"
 
 
 @pytest.mark.django_db

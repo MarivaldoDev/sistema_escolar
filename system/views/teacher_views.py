@@ -1,11 +1,12 @@
 import datetime
 
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import (Attendance, AttendanceRecord, CustomUser, Grade,
-                           Subject, Team)
+from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
+                           Grade, Subject, Team)
 from system.utiuls.functions import is_aproved
 
 
@@ -87,7 +88,6 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
 
-    # Garante que o aluno realmente pertence à turma
     if student not in team.members.all():
         return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
@@ -105,9 +105,22 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
             ).first()
 
             if existing_grade:
-                # Atualiza o valor da nota existente
-                existing_grade.value = grade.value
-                existing_grade.save()
+                messages.error(
+                    request,
+                    "Já existe uma nota lançada para este bimestre. Se deseja alterá-la, utilize a opção de atualizar nota.",
+                )
+                return render(
+                    request,
+                    "add_grade.html",
+                    {
+                        "form": form,
+                        "student": student,
+                        "subject": subject,
+                        "team": team,
+                    },
+                )
+                # existing_grade.value = grade.value
+                # existing_grade.save()
             else:
                 # Cria uma nova nota
                 grade.save()
@@ -123,15 +136,43 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
     )
 
 
-def update_grade(request, team_id: int, subject_id: int, student_id: int):
+def update_grade(
+    request, team_id: int, subject_id: int, student_id: int, bimonthly_id: int = None
+):
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
 
     if student not in team.members.all():
-        return redirect("turma_detail", team_id=team_id)
+        return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
-    grade_instance = student.grade_set.filter(subject=subject).first()
+    # Se nenhum bimestre foi escolhido, mostrar lista de bimestres para selecionar
+    if bimonthly_id is None:
+        bimonthlys = Bimonthly.objects.all().order_by("number")
+        # Para exibir notas já lançadas por bimestre (se existir)
+        bimestres_info = []
+        for b in bimonthlys:
+            g = Grade.objects.filter(
+                student=student, subject=subject, team=team, bimonthly=b
+            ).first()
+            bimestres_info.append({"bimonthly": b, "grade": g})
+
+        return render(
+            request,     
+            "choose_bimonthly.html",
+            {
+                "student": student,
+                "subject": subject,
+                "team": team,
+                "bimestres": bimestres_info,
+            },
+        )
+
+    # Se chegou com um bimestre, carregar / criar a instância da nota daquele bimestre
+    bimonthly = get_object_or_404(Bimonthly, id=bimonthly_id)
+    grade_instance = Grade.objects.filter(
+        student=student, subject=subject, team=team, bimonthly=bimonthly
+    ).first()
 
     if request.method == "POST":
         form = GradeUpdateForm(request.POST, instance=grade_instance)
@@ -139,6 +180,8 @@ def update_grade(request, team_id: int, subject_id: int, student_id: int):
             grade = form.save(commit=False)
             grade.student = student
             grade.subject = subject
+            grade.team = team
+            grade.bimonthly = bimonthly
             grade.save()
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
     else:
@@ -147,7 +190,13 @@ def update_grade(request, team_id: int, subject_id: int, student_id: int):
     return render(
         request,
         "update_grade.html",
-        {"form": form, "student": student, "subject": subject, "team": team},
+        {
+            "form": form,
+            "student": student,
+            "subject": subject,
+            "team": team,
+            "bimonthly": bimonthly,
+        },
     )
 
 

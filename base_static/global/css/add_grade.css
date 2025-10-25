@@ -79,3 +79,15 @@ body {
     font-weight: 500;
     cursor: not-allowed;
 }
+
+
+.error-message {
+    background-color: #f23538;
+    color: #fff;
+    padding: 6px 4px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    font-size: 1rem;
+    text-align: left;
+    animation: fadeIn 0.5s;
+}

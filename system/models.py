@@ -95,6 +95,8 @@ class Team(models.Model):
     year = models.IntegerField()
 
     def clean(self):
+        if not self.pk:
+            return
         for member in self.members.all():
             if member.role != "aluno":
                 raise ValidationError(
@@ -116,10 +118,11 @@ class Subject(models.Model):
     team = models.ManyToManyField(Team, related_name="subjects")
 
     def __str__(self):
-        turmas = ", ".join([t.name for t in self.team.all()])
-        return f"{self.name} - Turmas: {turmas}"
+        return self.name
 
     def clean(self):
+        if not self.pk:
+            return
         for teacher in self.teachers.all():
             if teacher.role != "professor":
                 raise ValidationError(

@@ -24,7 +24,12 @@ urlpatterns = [
         name="add_grade",
     ),
     path(
-        "turmas/<int:team_id>/update_grade/<int:subject_id>/<int:student_id>/",
+        "teams/<int:team_id>/subjects/<int:subject_id>/students/<int:student_id>/grade/update/",
+        teacher_views.update_grade,
+        name="update_grade",
+    ),
+    path(
+        "teams/<int:team_id>/subjects/<int:subject_id>/students/<int:student_id>/grade/update/<int:bimonthly_id>/",
         teacher_views.update_grade,
         name="update_grade",
     ),
