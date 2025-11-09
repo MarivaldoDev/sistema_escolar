@@ -1,9 +1,9 @@
 import datetime
 
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.core.paginator import Paginator
 
 from system.forms import GradeForm, GradeUpdateForm
 from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
@@ -217,7 +217,9 @@ def fazer_chamada(request, team_id: int, subject_id: int):
     )
 
     if not created:
-        messages.info(request, "Chamada já realizada hoje. Você pode atualizar os registros.")
+        messages.info(
+            request, "Chamada já realizada hoje. Você pode atualizar os registros."
+        )
 
     if request.method == "POST":
         for aluno in alunos:

@@ -1,7 +1,10 @@
 import random
+
 from django.utils import timezone
+
 from system.models import CustomUser, Team
 from system.utiuls.functions import generate_unique_registration_number
+
 
 def run():
     year = timezone.now().year
