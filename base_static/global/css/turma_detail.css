@@ -96,9 +96,6 @@ tbody tr:hover {
   background: #f1f1f1;
 }
 
-/* ================================
-   Badges de status
-================================ */
 .badge {
   padding: 6px 12px;
   border-radius: 20px;
@@ -118,15 +115,11 @@ tbody tr:hover {
   color: #333;
 }
 
-
-/* ================================
-   Coluna de ações
-================================ */
 .acoes {
   display: flex;
-  justify-content: center;   /* centraliza horizontalmente */
-  align-items: center;       /* centraliza verticalmente */
-  gap: 10px;                 /* espaço entre os botões */
+  justify-content: center;   
+  align-items: center;       
+  gap: 10px;                 
   margin-top: 20px;
   height: 100%;
 }
@@ -174,10 +167,52 @@ tbody tr:hover {
   border: 2px solid #ddd;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+}
 
-/* ================================
-   Rodapé
-================================ */
+.step-links {
+    display: flex;
+    gap: 10px;
+}
+
+.step-links a {
+    text-decoration: none;
+    color: #0056b3;
+    font-size: 14px;
+    padding: 8px 12px;
+    border: 1px solid #0056b3;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.step-links a:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.step-links .current {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.step-links a:first-child {
+    margin-right: auto;
+}
+
+.step-links a:last-child {
+    margin-left: auto;
+}
+
 footer {
   text-align: center;
   padding: 15px;

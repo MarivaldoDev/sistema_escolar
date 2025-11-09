@@ -15,6 +15,13 @@
 
         <form method="post">
             {% csrf_token %}
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    <div class="error-message">{{ message }}</div>
+                {% else %}
+                    <div class="info-message">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
             <table>
             <tr>
                 <th>Aluno</th>

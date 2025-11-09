@@ -29,7 +29,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for aluno in alunos %}
+      {% for aluno in page_obj %}
       <tr>
         <td>
           {% if aluno.image_profile %}
@@ -64,6 +64,24 @@
     </tbody>
     </table>
   </div>
+
+  <nav class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&q={{ request.GET.q.strip }}&type={{ request.GET.type|default:'usuarios' }}">&laquo; Primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q.strip }}&type={{ request.GET.type|default:'usuarios' }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q.strip }}&type={{ request.GET.type|default:'usuarios' }}">Próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q.strip }}&type={{ request.GET.type|default:'usuarios' }}" class="last">&raquo; Última</a>
+        {% endif %}
+  </span>
+    </nav>
 
   <footer>
     Sistema de Notas © 2025

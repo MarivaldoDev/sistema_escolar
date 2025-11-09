@@ -3,6 +3,7 @@ import datetime
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.core.paginator import Paginator
 
 from system.forms import GradeForm, GradeUpdateForm
 from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
@@ -70,6 +71,9 @@ def turma_detail(request, team_id: int, subject_id: int):
             aluno.status = "reprovado"
 
         alunos_com_status.append(aluno)
+        paginator = Paginator(alunos_com_status, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
 
     return render(
         request,
@@ -79,6 +83,7 @@ def turma_detail(request, team_id: int, subject_id: int):
             "subject": subject,
             "alunos": alunos_com_status,
             "bimonthlys": len(bimonthlys),
+            "page_obj": page_obj,
         },
     )
 
@@ -119,8 +124,6 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
                         "team": team,
                     },
                 )
-                # existing_grade.value = grade.value
-                # existing_grade.save()
             else:
                 # Cria uma nova nota
                 grade.save()
@@ -158,7 +161,7 @@ def update_grade(
             bimestres_info.append({"bimonthly": b, "grade": g})
 
         return render(
-            request,     
+            request,
             "choose_bimonthly.html",
             {
                 "student": student,
@@ -212,6 +215,9 @@ def fazer_chamada(request, team_id: int, subject_id: int):
         subject=subject,
         date__exact=datetime.date.today(),
     )
+
+    if not created:
+        messages.info(request, "Chamada já realizada hoje. Você pode atualizar os registros.")
 
     if request.method == "POST":
         for aluno in alunos:

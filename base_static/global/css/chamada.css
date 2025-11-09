@@ -85,10 +85,10 @@ button[type="submit"]:hover {
 }
 
 /* ======= FEEDBACK VISUAL ======= */
-.success-message {
+.info-message {
   text-align: center;
-  color: #00b48a;
-  background-color: #e5f9f2;
+  color: #c71717;
+  background-color: #ffffff;
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 20px;
