@@ -21,7 +21,9 @@
             <form method="get" action="{% url 'search' %}">
                 <input type="search" name="q" placeholder="Pesquisar disciplina..." value="{{ search_value }}">
                 <input type="hidden" name="type" value="disciplinas">
-                <button type="submit">Buscar</button>
+                <button type="submit">
+                    <img src="{% static 'global/images/lupa.png' %}" alt="Buscar">
+                </button>
             </form>
         </div>
 

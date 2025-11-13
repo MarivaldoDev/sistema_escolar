@@ -59,7 +59,7 @@ def turma_detail(request, team_id: int, subject_id: int):
     for aluno in alunos:
         grades_qs = Grade.objects.filter(
             student=aluno, subject=subject, team=turma
-        ).order_by("bimonthly__number")
+        ).order_by("student")
 
         grades = [g.value for g in grades_qs]
         bimonthlys = [str(g.bimonthly) for g in grades_qs]
@@ -71,9 +71,10 @@ def turma_detail(request, team_id: int, subject_id: int):
             aluno.status = "reprovado"
 
         alunos_com_status.append(aluno)
-        paginator = Paginator(alunos_com_status, 10)
+        paginator = Paginator(sorted(alunos_com_status, key=lambda x: x.first_name), 10)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
+    
 
     return render(
         request,
@@ -81,7 +82,6 @@ def turma_detail(request, team_id: int, subject_id: int):
         {
             "turma": turma,
             "subject": subject,
-            "alunos": alunos_com_status,
             "bimonthlys": len(bimonthlys),
             "page_obj": page_obj,
         },
@@ -208,20 +208,13 @@ def fazer_chamada(request, team_id: int, subject_id: int):
     subject = get_object_or_404(Subject, id=subject_id)
     alunos = team.members.all()
 
-    # Se o professor já fez a chamada hoje, mostramos o registro existente
-    attendance, created = Attendance.objects.get_or_create(
-        teacher=request.user,
-        team=team,
-        subject=subject,
-        date__exact=datetime.date.today(),
-    )
-
-    if not created:
-        messages.info(
-            request, "Chamada já realizada hoje. Você pode atualizar os registros."
-        )
-
     if request.method == "POST":
+        attendance, created = Attendance.objects.get_or_create(
+            teacher=request.user,
+            team=team,
+            subject=subject,
+            date=datetime.date.today(),
+        )
         for aluno in alunos:
             presente = request.POST.get(f"presente_{aluno.id}") == "on"
             AttendanceRecord.objects.update_or_create(
@@ -229,7 +222,19 @@ def fazer_chamada(request, team_id: int, subject_id: int):
             )
         return redirect("turma_detail", team_id=team.id, subject_id=subject.id)
 
-    registros_existentes = {r.student_id: r.present for r in attendance.records.all()}
+    attendance = Attendance.objects.filter(
+        teacher=request.user,
+        team=team,
+        subject=subject,
+        date=datetime.date.today(),
+    ).first()
+
+    if attendance is not None:
+        messages.info(
+            request, "Chamada já realizada hoje. Você pode atualizar os registros."
+        )
+
+    registros_existentes = {r.student_id: r.present for r in attendance.records.all()} if attendance else {}
 
     return render(
         request,
@@ -237,7 +242,7 @@ def fazer_chamada(request, team_id: int, subject_id: int):
         {
             "team": team,
             "subject": subject,
-            "alunos": alunos,
+            "alunos": alunos.order_by("first_name"),
             "registros": registros_existentes,
         },
     )

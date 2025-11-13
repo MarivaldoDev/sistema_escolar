@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Chamada - {{ team.name }} ({{ subject.name }})</h2>
+        <h2>Chamada - {{ team.name }} / {{ subject.name }} ({% now "d/m/Y" %})</h2>
 
         <form method="post">
             {% csrf_token %}

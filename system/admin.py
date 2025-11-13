@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Bimonthly, CustomUser, Grade, Subject, Team
+from .models import Bimonthly, CustomUser, Grade, Subject, Team, Attendance, AttendanceRecord
 
 
 @admin.register(CustomUser)
@@ -113,3 +113,5 @@ class SubjectAdmin(admin.ModelAdmin):
 
 admin.site.register(Grade)
 admin.site.register(Bimonthly)
+admin.site.register(Attendance)
+admin.site.register(AttendanceRecord)
