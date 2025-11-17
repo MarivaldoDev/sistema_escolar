@@ -1,0 +1,180 @@
+/* Styles for choose_bimonthly.html */
+:root{
+    --bg: linear-gradient(180deg,#eef6ff 0%, #e8f1fb 100%);
+    --surface: #ffffff;
+    --accent: #2563eb;
+    --accent-600: #1e40af;
+    --muted: #6b7280;
+    --border: #e6e9ef;
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(16,24,40,0.06);
+    --gap: 14px;
+    --transition: 180ms cubic-bezier(.2,.9,.2,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: #0f1724;
+    -webkit-font-smoothing:antialiased;
+}
+
+.form-container{
+    max-width:820px;
+    margin:48px auto;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:28px 28px;
+}
+
+.form-container h1{
+    margin:0 0 6px 0;
+    font-size:1.2rem;
+    color:var(--accent-600);
+}
+
+.form-container p{
+    margin:0 0 var(--gap) 0;
+    color:var(--muted);
+}
+
+.form-container ul{
+    list-style:none;
+    padding:0;
+    margin:0 0 20px 0;
+    border-top:1px dashed var(--border);
+}
+
+.form-container li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px dashed var(--border);
+}
+
+.form-container li .left{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-container li .left .bim{
+    font-weight:700;
+    color:#0f1724;
+}
+
+.form-container li .left .note{
+    font-size:0.95rem;
+    color:var(--muted);
+}
+
+/* Grade badge */
+.badge{
+    display:inline-block;
+    min-width:56px;
+    text-align:center;
+    padding:6px 10px;
+    border-radius:999px;
+    background: #f1f5f9;
+    color: #0f1724;
+    font-weight:600;
+}
+
+/* Action link */
+a.action-link{
+    display:inline-block;
+    text-decoration:none;
+    color:#fff;
+    background:var(--accent);
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:600;
+    transition:transform var(--transition), background var(--transition);
+}
+
+a.action-link:hover,
+a.action-link:focus{
+    background:var(--accent-600);
+    transform:translateY(-2px);
+    outline:none;
+}
+
+/* Back link */
+.form-container .back{
+    display:inline-block;
+    margin-top:8px;
+    color:var(--accent-600);
+    text-decoration:none;
+    font-weight:600;
+}
+
+.form-container .back:hover,
+.form-container .back:focus{
+    text-decoration:underline;
+    outline:none;
+}
+
+/* Small screens */
+@media (max-width:600px){
+    .form-container{padding:18px 16px;margin:20px 12px}
+    .badge{min-width:46px;padding:6px 8px}
+    .form-container li{flex-direction:column;align-items:flex-start;gap:8px}
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce){
+    *{transition:none!important}
+}
+
+/* Button utility classes */
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+.btn:focus{outline:none; box-shadow:0 0 0 4px rgba(37,99,235,0.12)}
+
+.btn-primary{background:var(--accent); color:#fff}
+.btn-primary:hover{background:var(--accent-600); transform:translateY(-2px)}
+.btn-primary:active{transform:translateY(0)}
+
+.btn-ghost{background:transparent; color:var(--accent-600); border-color:transparent}
+.btn-ghost:hover{background:rgba(37,99,235,0.06); text-decoration:none}
+
+.btn-outline{background:transparent; color:var(--accent-600); border:1px solid var(--border)}
+.btn-outline:hover{background:rgba(37,99,235,0.04)}
+
+/* Apply button styles to existing links so template doesn't need immediate edits */
+.form-container ul li a,
+.form-container ul li a:link,
+.form-container ul li a:visited{
+    padding:8px 12px;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    display:inline-block;
+    transition:transform var(--transition), background var(--transition);
+}
+.form-container ul li a:hover,.form-container ul li a:focus{background:var(--accent-600); transform:translateY(-2px); outline:none}
+
+/* Make back link look like a secondary/ghost button */
+.form-container .back{padding:8px 12px;border-radius:10px;display:inline-block;background:transparent;border:1px solid transparent}
+.form-container .back:hover,.form-container .back:focus{text-decoration:underline}

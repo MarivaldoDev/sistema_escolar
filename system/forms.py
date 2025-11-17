@@ -37,6 +37,10 @@ class GradeForm(forms.ModelForm):
     class Meta:
         model = Grade
         fields = ("value", "bimonthly")
+        labels = {
+            "value": "Nota",
+            "bimonthly": "Bimestre",
+        }
         widgets = {
             "value": forms.NumberInput(
                 attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}
@@ -57,6 +61,10 @@ class GradeUpdateForm(forms.ModelForm):
     class Meta:
         model = Grade
         fields = ("value", "bimonthly")
+        labels = {
+            "value": "Nota",
+            "bimonthly": "Bimestre",
+        }
         widgets = {
             "value": forms.NumberInput(
                 attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}
