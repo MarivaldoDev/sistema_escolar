@@ -32,6 +32,7 @@ def my_login(request):
     else:
         for error in form.errors:
             messages.error(request, form.errors[error])
+
     return render(request, "login.html", {"form": form})
 
 

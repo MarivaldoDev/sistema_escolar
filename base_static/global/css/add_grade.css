@@ -1,94 +1,158 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f6f9;
+/* ================================
+   Reset básico
+================================ */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
-.form-container {
-    background: #fff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
-    width: 400px;
-}
-
-.form-container h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 22px;
+/* ================================
+   Corpo
+================================ */
+body {
+    background-color: #f9f9f9;
     color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
 }
 
+/* ================================
+   Cabeçalho
+================================ */
+header {
+    background: #2c3e50;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 22px;
+}
+
+header nav a {
+    color: #fff;
+	font-size: 22px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+header nav a:hover {
+    background: #768491;
+}
+
+/* ================================
+   Container do formulário
+================================ */
+.form-container {
+    width: 90%;
+    max-width: 550px;
+    margin: auto; /* <-- CENTRALIZA VERTICALMENTE E HORIZONTALMENTE */
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.12);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: #2c3e50;
+}
+
+/* ================================
+   Mensagens
+================================ */
+.error-message,
+.success-message {
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.error-message {
+    background: #ffdddd;
+    color: #a60000;
+    border: 1px solid #ff7c7c;
+}
+
+.success-message {
+    background: #ddffdd;
+    color: #0e8a00;
+    border: 1px solid #7cff7c;
+}
+
+/* ================================
+   Formulário
+================================ */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     display: flex;
     flex-direction: column;
 }
 
 .form-group label {
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #444;
-}
-
-.form-group input, 
-.form-group select, 
-.form-group textarea {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.form-group input:focus, 
-.form-group select:focus, 
-.form-group textarea:focus {
-    border-color: #4A90E2;
-    outline: none;
-    box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
-}
-
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    background: #4A90E2;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    margin-bottom: 6px;
+    color: #34495e;
 }
 
-.btn-submit:hover {
-    background: #357ABD;
+.readonly-info,
+.form-group input,
+.form-group select {
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f4f4f4;
 }
 
-/* Campos apenas informativos */
 .readonly-info {
-    background: #f0f2f5;
-    border: 1px solid #dcdfe3;
-    color: #555;
-    font-weight: 500;
     cursor: not-allowed;
 }
 
-
-.error-message {
-    background-color: #f23538;
+/* ================================
+   Botão
+================================ */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #4bd202ab;
     color: #fff;
-    padding: 6px 4px;
-    border-radius: 10px;
-    margin-bottom: 22px;
-    font-size: 1rem;
-    text-align: left;
-    animation: fadeIn 0.5s;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background: #0e7804e8;
+}
+
+/* ================================
+   Responsividade
+================================ */
+@media (max-width: 500px) {
+    .form-container {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 16px;
+    }
 }

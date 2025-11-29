@@ -9,10 +9,21 @@
     <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
 </head>
 <body>
+    <header>
+        <h1>Lançar Nota</h1>
+        <nav>
+            <a href="{% url 'turma_detail' team.id subject.id %}">Voltar</a>
+        </nav>
+    </header>
+
     <div class="form-container">
-        <h1>Lançar Nota do Aluno</h1>
+        <h2 class="form-title">Lançar Nota do Aluno</h2>
+
+
         <form method="POST" action="{% url 'add_grade' team.id subject.id student.id %}">
             {% csrf_token %}
+
+
             {% for message in messages %}
                 {% if 'error' in message.tags %}
                     <div class="error-message">{{ message }}</div>
@@ -20,25 +31,32 @@
                     <div class="success-message">{{ message }}</div>
                 {% endif %}
             {% endfor %}
+
+
             <div class="form-group">
                 <label>Aluno</label>
                 <input type="text" value="{{ student.get_full_name }}" readonly class="readonly-info">
             </div>
+
 
             <div class="form-group">
                 <label>Disciplina</label>
                 <input type="text" value="{{ subject.name }}" readonly class="readonly-info">
             </div>
 
+
             <div class="form-group">
                 {{ form.value.label_tag }}
                 {{ form.value }}
             </div>
 
+
             <div class="form-group">
                 {{ form.bimonthly.label_tag }}
                 {{ form.bimonthly }}
             </div>
+
+
             <button type="submit" class="btn-submit">Salvar Nota</button>
         </form>
     </div>

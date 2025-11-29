@@ -6,9 +6,11 @@ from .models import AttendanceRecord, CustomUser, Grade
 class LoginForm(forms.Form):
     registration_number = forms.CharField(
         max_length=8,
+        label="Matrícula",
         widget=forms.TextInput(attrs={"placeholder": "Digite seu número de matrícula"}),
     )
     password = forms.CharField(
+        label="Senha",
         widget=forms.PasswordInput(attrs={"placeholder": "Digite sua senha"})
     )
 
@@ -16,7 +18,7 @@ class LoginForm(forms.Form):
         cleaned_data = super().clean()
         registration_number = cleaned_data.get("registration_number")
         password = cleaned_data.get("password")
-
+    
         if not registration_number or not password:
             raise forms.ValidationError("Por favor, preencha todos os campos.")
 

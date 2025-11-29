@@ -125,7 +125,6 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
                     },
                 )
             else:
-                # Cria uma nova nota
                 grade.save()
 
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)

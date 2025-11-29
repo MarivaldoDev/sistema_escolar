@@ -1,39 +1,48 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atualizar Nota</title>
-    <link rel="stylesheet" href="{% static 'global/css/add_grade.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
-</head>
-<body>
-    <div class="form-container">
-        <h1>Atualizar Nota do Aluno</h1>
-        <form method="POST" action="{% if bimonthly %}{% url 'update_grade' team.id subject.id student.id bimonthly.id %}{% else %}{% url 'update_grade' team.id subject.id student.id %}{% endif %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Aluno</label>
-                <input type="text" value="{{ student.get_full_name }}" readonly class="readonly-info">
-            </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Atualizar Nota</title>
+        <link rel="stylesheet" href="{% static 'global/css/add_grade.css' %}">
+        <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
+    </head>
+    <body>
 
-            <div class="form-group">
-                <label>Disciplina</label>
-                <input type="text" value="{{ subject.name }}" readonly class="readonly-info">
-            </div>
+        <header>
+            <h1>Atualizar Nota</h1>
+            <nav>
+                <a href="{% url 'turma_detail' team.id subject.id %}">Voltar</a>
+            </nav>
+        </header>
 
-            <div class="form-group">
-                {{ form.value.label_tag }}
-                {{ form.value }}
-            </div>
+        <div class="form-container">
+            <h1>Atualizar Nota do Aluno</h1>
+            <br>
+            <form method="POST" action="{% if bimonthly %}{% url 'update_grade' team.id subject.id student.id bimonthly.id %}{% else %}{% url 'update_grade' team.id subject.id student.id %}{% endif %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Aluno</label>
+                    <input type="text" value="{{ student.get_full_name }}" readonly class="readonly-info">
+                </div>
 
-            <div class="form-group">
-                {{ form.bimonthly.label_tag }}
-                {{ form.bimonthly }}
-            </div>
-            <button type="submit" class="btn-submit"> Atualizar Nota</button>
-        </form>
-    </div>
-</body>
+                <div class="form-group">
+                    <label>Disciplina</label>
+                    <input type="text" value="{{ subject.name }}" readonly class="readonly-info">
+                </div>
+
+                <div class="form-group">
+                    {{ form.value.label_tag }}
+                    {{ form.value }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.bimonthly.label_tag }}
+                    {{ form.bimonthly }}
+                </div>
+                <button type="submit" class="btn-submit"> Atualizar Nota</button>
+            </form>
+        </div>
+    </body>
 </html>
