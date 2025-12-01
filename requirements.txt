@@ -2,9 +2,11 @@ asgiref==3.9.1
 black==25.1.0
 cfgv==3.4.0
 click==8.2.1
+colorlog==6.10.1
 coverage==7.10.7
 distlib==0.4.0
 Django==5.2.5
+django-jazzmin==3.0.1
 filelock==3.19.1
 identify==2.6.13
 iniconfig==2.1.0
