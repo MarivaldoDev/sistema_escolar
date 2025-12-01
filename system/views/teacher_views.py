@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -9,6 +10,8 @@ from system.forms import GradeForm, GradeUpdateForm
 from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
                            Grade, Subject, Team)
 from system.utiuls.functions import is_aproved
+
+logger = logging.getLogger(__name__)
 
 
 def escolher_materia(request, team_id: int):
@@ -36,7 +39,11 @@ def escolher_materia(request, team_id: int):
 def turmas(request):
     user = request.user
 
-    if user.role == "professor" and not user.is_superuser:
+    if user.role == "aluno" and not user.is_superuser:
+        logger.warning("Aluno tentou acessar a lista de turmas")
+        return redirect("home")
+
+    elif user.role == "professor" and not user.is_superuser:
         turmas = Team.objects.filter(subjects__teachers=user).distinct()
     else:
         turmas = Team.objects.all()
@@ -46,6 +53,10 @@ def turmas(request):
 
 def turma_detail(request, team_id: int, subject_id: int):
     user = request.user
+    if user.role == "aluno" and not user.is_superuser:
+        logger.warning("Aluno tentou acessar detalhes da turma")
+        return redirect("home")
+
     turma = get_object_or_404(Team, id=team_id)
 
     if user.role == "professor" and not user.is_superuser:
@@ -74,7 +85,6 @@ def turma_detail(request, team_id: int, subject_id: int):
         paginator = Paginator(sorted(alunos_com_status, key=lambda x: x.first_name), 10)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-    
 
     return render(
         request,
@@ -110,6 +120,9 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
             ).first()
 
             if existing_grade:
+                logger.warning(
+                    "Tentativa de adicionar nota duplicada para o mesmo bimestre"
+                )
                 messages.error(
                     request,
                     "Já existe uma nota lançada para este bimestre. Se deseja alterá-la, utilize a opção de atualizar nota.",
@@ -233,7 +246,11 @@ def fazer_chamada(request, team_id: int, subject_id: int):
             request, "Chamada já realizada hoje. Você pode atualizar os registros."
         )
 
-    registros_existentes = {r.student_id: r.present for r in attendance.records.all()} if attendance else {}
+    registros_existentes = (
+        {r.student_id: r.present for r in attendance.records.all()}
+        if attendance
+        else {}
+    )
 
     return render(
         request,

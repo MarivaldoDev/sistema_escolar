@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
@@ -6,6 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from ..forms import LoginForm
 from ..models import CustomUser, Grade, Team
 from ..utiuls.functions import is_aproved
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -26,6 +30,7 @@ def my_login(request):
         )
         if user is not None:
             login(request, user)
+            logger.info("Usuário fez login com sucesso")
             return redirect("home")
         else:
             messages.error(request, "Número de matrícula ou senha inválidos.")
@@ -38,6 +43,7 @@ def my_login(request):
 
 def my_logout(request):
     logout(request)
+    logger.info("Usuário fez logout com sucesso")
     return redirect("login")
 
 

@@ -11,14 +11,14 @@ class LoginForm(forms.Form):
     )
     password = forms.CharField(
         label="Senha",
-        widget=forms.PasswordInput(attrs={"placeholder": "Digite sua senha"})
+        widget=forms.PasswordInput(attrs={"placeholder": "Digite sua senha"}),
     )
 
     def clean(self):
         cleaned_data = super().clean()
         registration_number = cleaned_data.get("registration_number")
         password = cleaned_data.get("password")
-    
+
         if not registration_number or not password:
             raise forms.ValidationError("Por favor, preencha todos os campos.")
 
