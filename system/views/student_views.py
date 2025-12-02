@@ -1,18 +1,27 @@
+import logging
+
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.models import CustomUser, Grade, Team
 from system.utiuls.functions import is_aproved
 
+logger = logging.getLogger(__name__)
+
 
 def my_grades(request, student_id: int):
+    user = request.user
     student = get_object_or_404(CustomUser, id=student_id)
 
-    if request.user != student:
-        return redirect("home")
+    if user != student:
+        logger.warning(
+            f"Professor {request.user.first_name} tentou acessar as notas de um aluno"
+        )
+        return redirect("acesso_negado", user_role=user.role)
 
     team = Team.objects.filter(members=student).first()
 
     if not team:
+        logger.warning(f"Aluno {student.first_name} não está associado a nenhuma turma")
         return render(
             request,
             "my_grades.html",
@@ -27,7 +36,6 @@ def my_grades(request, student_id: int):
     subjects_with_grades = []
 
     for subject in subjects:
-        # ✅ agora filtrando por student, subject e team
         subject_grades = Grade.objects.filter(
             student=student, subject=subject, team=team
         ).order_by("bimonthly__number")

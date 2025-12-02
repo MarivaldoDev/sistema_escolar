@@ -7,8 +7,15 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
-                           Grade, Subject, Team)
+from system.models import (
+    Attendance,
+    AttendanceRecord,
+    Bimonthly,
+    CustomUser,
+    Grade,
+    Subject,
+    Team,
+)
 from system.utiuls.functions import is_aproved
 
 logger = logging.getLogger(__name__)
@@ -40,8 +47,8 @@ def turmas(request):
     user = request.user
 
     if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou acessar a lista de turmas")
-        return redirect("home")
+        logger.warning("Aluno tentou acessar a listagem de turmas")
+        return redirect("acesso_negado", user_role=user.role)
 
     elif user.role == "professor" and not user.is_superuser:
         turmas = Team.objects.filter(subjects__teachers=user).distinct()
@@ -55,7 +62,7 @@ def turma_detail(request, team_id: int, subject_id: int):
     user = request.user
     if user.role == "aluno" and not user.is_superuser:
         logger.warning("Aluno tentou acessar detalhes da turma")
-        return redirect("home")
+        return redirect("acesso_negado", user_role=user.role)
 
     turma = get_object_or_404(Team, id=team_id)
 
@@ -99,6 +106,11 @@ def turma_detail(request, team_id: int, subject_id: int):
 
 
 def add_grade(request, team_id: int, subject_id: int, student_id: int):
+    user = request.user
+    if user.role == "aluno" and not user.is_superuser:
+        logger.warning("Aluno tentou acessar a página de adição de nota")
+        return redirect("acesso_negado", user_role=user.role)
+
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
@@ -154,6 +166,11 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
 def update_grade(
     request, team_id: int, subject_id: int, student_id: int, bimonthly_id: int = None
 ):
+    user = request.user
+    if user.role == "aluno" and not user.is_superuser:
+        logger.warning("Aluno tentou acessar atualização de nota")
+        return redirect("acesso_negado", user_role=user.role)
+
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
@@ -216,6 +233,11 @@ def update_grade(
 
 
 def fazer_chamada(request, team_id: int, subject_id: int):
+    user = request.user
+    if user.role == "aluno" and not user.is_superuser:
+        logger.warning("Aluno tentou modificar a chamada")
+        return redirect("acesso_negado", user_role=user.role)
+
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
     alunos = team.members.all()
@@ -242,6 +264,7 @@ def fazer_chamada(request, team_id: int, subject_id: int):
     ).first()
 
     if attendance is not None:
+        logger.info("Professor acessou chamada já realizada hoje")
         messages.info(
             request, "Chamada já realizada hoje. Você pode atualizar os registros."
         )

@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso Negado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'global/css/acesso_negado.css' %}">
+    <title>Acesso Negado</title>
+</head>
+<body>
+    <div>
+        <img src="{% static 'global/images/acesso_negado.gif' %}" alt="Acesso Negado" width="300">
+        {% if user_role == "aluno" %}
+            <h1>Apenas professores têm acesso a esta página.</h1>
+        {% endif %}
+        {% if user_role == "professor" %}
+            <h1>Apenas alunos têm acesso a esta página.</h1>
+        {% endif %}
+        <p>Redirecionando em <span id="timer">5</span> segundos...</p>
+    </div>
+    <script src="{% static 'global/js/acesso_negado.js' %}"></script>
+</body>
+</html>

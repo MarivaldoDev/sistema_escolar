@@ -202,17 +202,37 @@ LOGGING = {
                 "CRITICAL": "bold_red",
             },
         },
+        "simple_format": {
+            "format": "%(levelname)s | %(name)s | %(asctime)s | %(message)s | %(filename)s | %(lineno)d",
+        },
     },
     "handlers": {
-        # Mostra no terminal (durante desenvolvimento)
+        "debug_file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/debug.log"),
+            "level": "DEBUG",
+            "formatter": "default",
+        },
+        "info_file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/info.log"),
+            "level": "INFO",
+            "formatter": "default",
+        },
+        "error_file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/error.log"),
+            "level": "ERROR",
+            "formatter": "simple_format",
+        },
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "colored",  # <- agora existe :)
+            "formatter": "colored",
         },
-        # Grava em arquivo (sem cores)
         "file": {
             "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "logs", "app.log"),
+            "filename": os.path.join(BASE_DIR, "logs/app.log"),
+            "level": "DEBUG",
             "formatter": "default",
         },
     },
@@ -222,9 +242,14 @@ LOGGING = {
             "handlers": ["console", "file"],
             "level": "INFO",
         },
+        "django.utils.autoreload": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
         # Logger do seu app SYSTEM
         "system": {
-            "handlers": ["console", "file"],
+            "handlers": ["debug_file", "info_file", "error_file", "console"],
             "level": "DEBUG",
             "propagate": False,
         },

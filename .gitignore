@@ -4,6 +4,7 @@
 melhorias.txt
 .vscode/
 ### Django ###
+logs/
 *.log
 *.pot
 *.pyc

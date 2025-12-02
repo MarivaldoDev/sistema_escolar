@@ -43,4 +43,9 @@ urlpatterns = [
         teacher_views.fazer_chamada,
         name="fazer_chamada",
     ),
+    path(
+        "acesso_negado/<str:user_role>/",
+        general_views.acesso_negado,
+        name="acesso_negado",
+    ),
 ]

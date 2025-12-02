@@ -3,6 +3,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ..forms import LoginForm
@@ -28,11 +29,13 @@ def my_login(request):
         user = authenticate(
             request, registration_number=registration_number, password=password
         )
+
         if user is not None:
             login(request, user)
             logger.info("Usuário fez login com sucesso")
             return redirect("home")
         else:
+            logger.warning("Falha no login: número de matrícula ou senha inválidos")
             messages.error(request, "Número de matrícula ou senha inválidos.")
     else:
         for error in form.errors:
@@ -96,6 +99,12 @@ def search(request):
                 subjects_with_grades, key=lambda x: x["subject"].name
             ),
             "search_value": search_value,
-            "bimonthlys": max_bimonthlys,  # Adicione esta linha
+            "bimonthlys": max_bimonthlys,
         },
+    )
+
+
+def acesso_negado(request, user_role: str):
+    return HttpResponseForbidden(
+        render(request, "acesso_negado.html", {"user_role": user_role})
     )
