@@ -112,7 +112,7 @@ form {
 ================================ */
 .error-message,
 .success-message {
-    padding: 12px;
+    padding: 12px 12px;
     border-radius: 6px;
     margin-bottom: 20px;
     font-size: 14px;

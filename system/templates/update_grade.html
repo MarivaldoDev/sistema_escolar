@@ -22,6 +22,15 @@
             <br>
             <form method="POST" action="{% if bimonthly %}{% url 'update_grade' team.id subject.id student.id bimonthly.id %}{% else %}{% url 'update_grade' team.id subject.id student.id %}{% endif %}">
                 {% csrf_token %}
+
+                {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                        <div class="error-message">{{ message }}</div>
+                    {% else %}
+                        <div class="success-message">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+
                 <div class="form-group">
                     <label>Aluno</label>
                     <input type="text" value="{{ student.get_full_name }}" readonly class="readonly-info">

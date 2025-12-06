@@ -1,9 +1,10 @@
 import datetime
 import logging
+from functools import wraps
+from collections import defaultdict
 
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.forms import GradeForm, GradeUpdateForm
@@ -21,77 +22,142 @@ from system.utiuls.functions import is_aproved
 logger = logging.getLogger(__name__)
 
 
+
+def professor_required(view_func):
+    """
+    Bloqueia o acesso de alunos (exceto superuser).
+    Elimina repetições nas views.
+    """
+
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+
+        if user.role == "aluno" and not user.is_superuser:
+            logger.warning(f"Aluno tentou acessar: {request.path}")
+            return redirect("acesso_negado", user_role=user.role)
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
+
+
+@professor_required
 def escolher_materia(request, team_id: int):
     user = request.user
-    turma = get_object_or_404(Team, id=team_id)
+
+    turma = get_object_or_404(
+        Team.objects.prefetch_related("subjects__teachers"),
+        id=team_id
+    )
 
     if user.role == "professor" and not user.is_superuser:
-        subjects = turma.subjects.filter(teachers=user)
+        subjects = list(turma.subjects.filter(teachers=user))
     else:
-        subjects = turma.subjects.all()
+        subjects = list(turma.subjects.all())
 
-    if subjects.count() > 1:
-        return render(
-            request,
-            "escolher_materia.html",
-            {"turma": turma, "subjects": subjects},
-        )
-    elif subjects.count() == 1:
-        subject = subjects.first()
-        return redirect("turma_detail", team_id=team_id, subject_id=subject.id)
-    else:
-        return HttpResponse("Nenhuma matéria disponível para esta turma.")
+    if not subjects:
+        messages.warning(request, "Nenhuma matéria disponível para esta turma.")
+        return redirect("turmas")
+
+    if len(subjects) == 1:
+        return redirect("turma_detail", team_id=team_id, subject_id=subjects[0].id)
+
+    return render(
+        request,
+        "escolher_materia.html",
+        {"turma": turma, "subjects": subjects},
+    )
 
 
+@professor_required
 def turmas(request):
     user = request.user
 
-    if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou acessar a listagem de turmas")
-        return redirect("acesso_negado", user_role=user.role)
-
-    elif user.role == "professor" and not user.is_superuser:
-        turmas = Team.objects.filter(subjects__teachers=user).distinct()
+    if user.role == "professor" and not user.is_superuser:
+        turmas = (
+            Team.objects
+            .filter(subjects__teachers=user)
+            .distinct()
+            .prefetch_related("subjects")
+        )
     else:
-        turmas = Team.objects.all()
+        turmas = Team.objects.all().prefetch_related("subjects")
 
     return render(request, "turmas.html", {"turmas": turmas})
 
 
+@professor_required
 def turma_detail(request, team_id: int, subject_id: int):
     user = request.user
-    if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou acessar detalhes da turma")
-        return redirect("acesso_negado", user_role=user.role)
 
-    turma = get_object_or_404(Team, id=team_id)
+    turma = get_object_or_404(
+        Team.objects.prefetch_related("members"),
+        id=team_id
+    )
 
     if user.role == "professor" and not user.is_superuser:
-        subject = get_object_or_404(turma.subjects.filter(teachers=user), id=subject_id)
+        subject = get_object_or_404(
+            turma.subjects.filter(teachers=user),
+            id=subject_id
+        )
     else:
         subject = get_object_or_404(turma.subjects, id=subject_id)
 
-    alunos = turma.members.all()
-    alunos_com_status = []
+    alunos = list(turma.members.all())
 
+    grades_qs = (
+        Grade.objects
+        .filter(team=turma, subject=subject)
+        .select_related("bimonthly", "student")
+    )
+
+    grades_by_student = defaultdict(list)
+    for g in grades_qs:
+        value = g.value
+        try:
+            value_float = float(value)
+        except Exception:
+            logger.debug("Nota com valor inválido ignorada", extra={
+                "grade_id": getattr(g, "id", None),
+                "student_id": getattr(g.student, "id", None),
+                "raw_value": value,
+            })
+            continue
+
+        grades_by_student[g.student_id].append({"value": value_float, "bimonthly": str(g.bimonthly)})
+
+    bimestres_all = list(Bimonthly.objects.all().order_by("number"))
+    bimes_count = len(bimestres_all)
+
+    alunos_status = []
     for aluno in alunos:
-        grades_qs = Grade.objects.filter(
-            student=aluno, subject=subject, team=turma
-        ).order_by("student")
+        aluno_grades_info = grades_by_student.get(aluno.id, [])
+        grades_values = [item["value"] for item in aluno_grades_info]
+        bimes_list = [item["bimonthly"] for item in aluno_grades_info]
 
-        grades = [g.value for g in grades_qs]
-        bimonthlys = [str(g.bimonthly) for g in grades_qs]
+        if grades_values:
+            try:
+                aprovado = is_aproved(grades_values, bimes_list)
+            except Exception as e:
+                # Se is_aproved lançar erro, loga e considera reprovado por segurança
+                logger.error("Erro em is_aproved", exc_info=True, extra={
+                    "student_id": aluno.id,
+                    "grades_values": grades_values,
+                    "bimes": bimes_list,
+                })
+                aprovado = False
 
-        if grades:
-            aprovado = is_aproved(grades, bimonthlys)
             aluno.status = "aprovado" if aprovado else "reprovado"
         else:
             aluno.status = "reprovado"
 
-        alunos_com_status.append(aluno)
-        paginator = Paginator(sorted(alunos_com_status, key=lambda x: x.first_name), 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+        alunos_status.append(aluno)
+
+    alunos_status.sort(key=lambda x: x.first_name)
+
+    paginator = Paginator(alunos_status, 10)
+    page_obj = paginator.get_page(request.GET.get("page"))
 
     return render(
         request,
@@ -99,23 +165,19 @@ def turma_detail(request, team_id: int, subject_id: int):
         {
             "turma": turma,
             "subject": subject,
-            "bimonthlys": len(bimonthlys),
+            "bimonthlys": bimes_count,
             "page_obj": page_obj,
         },
     )
 
 
+@professor_required
 def add_grade(request, team_id: int, subject_id: int, student_id: int):
-    user = request.user
-    if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou acessar a página de adição de nota")
-        return redirect("acesso_negado", user_role=user.role)
-
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
 
-    if student not in team.members.all():
+    if not team.members.filter(id=student.id).exists():
         return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
     if request.method == "POST":
@@ -126,33 +188,25 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
             grade.subject = subject
             grade.team = team
 
-            # Verifica se já existe uma nota lançada para o mesmo bimestre
-            existing_grade = Grade.objects.filter(
-                student=student, subject=subject, team=team, bimonthly=grade.bimonthly
-            ).first()
-
-            if existing_grade:
-                logger.warning(
-                    "Tentativa de adicionar nota duplicada para o mesmo bimestre"
-                )
-                messages.error(
-                    request,
-                    "Já existe uma nota lançada para este bimestre. Se deseja alterá-la, utilize a opção de atualizar nota.",
-                )
+            if Grade.objects.filter(
+                student=student,
+                subject=subject,
+                team=team,
+                bimonthly=grade.bimonthly,
+            ).exists():
+                messages.error(request, "Já existe uma nota para este bimestre.")
                 return render(
                     request,
                     "add_grade.html",
-                    {
-                        "form": form,
-                        "student": student,
-                        "subject": subject,
-                        "team": team,
-                    },
+                    {"form": form, "student": student, "subject": subject, "team": team},
                 )
-            else:
-                grade.save()
 
+            grade.save()
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
+
+        for erro in form.errors.get("__all__", []):
+            messages.error(request, erro)
+
     else:
         form = GradeForm()
 
@@ -163,45 +217,37 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
     )
 
 
+@professor_required
 def update_grade(
     request, team_id: int, subject_id: int, student_id: int, bimonthly_id: int = None
 ):
-    user = request.user
-    if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou acessar atualização de nota")
-        return redirect("acesso_negado", user_role=user.role)
-
     student = get_object_or_404(CustomUser, id=student_id)
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
 
-    if student not in team.members.all():
+    if not team.members.filter(id=student.id).exists():
         return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
-    # Se nenhum bimestre foi escolhido, mostrar lista de bimestres para selecionar
     if bimonthly_id is None:
-        bimonthlys = Bimonthly.objects.all().order_by("number")
-        # Para exibir notas já lançadas por bimestre (se existir)
-        bimestres_info = []
-        for b in bimonthlys:
-            g = Grade.objects.filter(
-                student=student, subject=subject, team=team, bimonthly=b
-            ).first()
-            bimestres_info.append({"bimonthly": b, "grade": g})
+        bimestres = Bimonthly.objects.all().order_by("number")
+        info = [
+            {
+                "bimonthly": b,
+                "grade": Grade.objects.filter(
+                    student=student, subject=subject, team=team, bimonthly=b
+                ).first(),
+            }
+            for b in bimestres
+        ]
 
         return render(
             request,
             "choose_bimonthly.html",
-            {
-                "student": student,
-                "subject": subject,
-                "team": team,
-                "bimestres": bimestres_info,
-            },
+            {"student": student, "subject": subject, "team": team, "bimestres": info},
         )
 
-    # Se chegou com um bimestre, carregar / criar a instância da nota daquele bimestre
     bimonthly = get_object_or_404(Bimonthly, id=bimonthly_id)
+
     grade_instance = Grade.objects.filter(
         student=student, subject=subject, team=team, bimonthly=bimonthly
     ).first()
@@ -216,6 +262,10 @@ def update_grade(
             grade.bimonthly = bimonthly
             grade.save()
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
+
+        for erro in form.errors.get("__all__", []):
+            messages.error(request, erro)
+
     else:
         form = GradeUpdateForm(instance=grade_instance)
 
@@ -232,48 +282,47 @@ def update_grade(
     )
 
 
+@professor_required
 def fazer_chamada(request, team_id: int, subject_id: int):
-    user = request.user
-    if user.role == "aluno" and not user.is_superuser:
-        logger.warning("Aluno tentou modificar a chamada")
-        return redirect("acesso_negado", user_role=user.role)
-
     team = get_object_or_404(Team, id=team_id)
     subject = get_object_or_404(Subject, id=subject_id)
-    alunos = team.members.all()
+
+    alunos = team.members.order_by("first_name")
+    today = datetime.date.today()
 
     if request.method == "POST":
-        attendance, created = Attendance.objects.get_or_create(
+        attendance, _ = Attendance.objects.get_or_create(
             teacher=request.user,
             team=team,
             subject=subject,
-            date=datetime.date.today(),
+            date=today,
         )
+
         for aluno in alunos:
             presente = request.POST.get(f"presente_{aluno.id}") == "on"
             AttendanceRecord.objects.update_or_create(
-                attendance=attendance, student=aluno, defaults={"present": presente}
+                attendance=attendance,
+                student=aluno,
+                defaults={"present": presente},
             )
+
         return redirect("turma_detail", team_id=team.id, subject_id=subject.id)
 
-    attendance = Attendance.objects.filter(
-        teacher=request.user,
-        team=team,
-        subject=subject,
-        date=datetime.date.today(),
-    ).first()
-
-    if attendance is not None:
-        logger.info("Professor acessou chamada já realizada hoje")
-        messages.info(
-            request, "Chamada já realizada hoje. Você pode atualizar os registros."
+    attendance = (
+        Attendance.objects.filter(
+            teacher=request.user, team=team, subject=subject, date=today
         )
-
-    registros_existentes = (
-        {r.student_id: r.present for r in attendance.records.all()}
-        if attendance
-        else {}
+        .prefetch_related("records")
+        .first()
     )
+
+    registros = (
+        {r.student_id: r.present for r in attendance.records.all()}
+        if attendance else {}
+    )
+
+    if attendance:
+        messages.info(request, "Chamada já realizada hoje. Você pode atualizar.")
 
     return render(
         request,
@@ -281,7 +330,7 @@ def fazer_chamada(request, team_id: int, subject_id: int):
         {
             "team": team,
             "subject": subject,
-            "alunos": alunos.order_by("first_name"),
-            "registros": registros_existentes,
+            "alunos": alunos,
+            "registros": registros,
         },
     )

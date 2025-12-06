@@ -28,6 +28,8 @@ class CustomUserAdmin(UserAdmin):
         "is_active",
     )
 
+    list_filter = ("role", "is_staff", "is_active")
+
     fieldsets = (
         (None, {"fields": ("password",)}),
         (
@@ -119,7 +121,56 @@ class SubjectAdmin(admin.ModelAdmin):
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 
-admin.site.register(Grade)
+@admin.register(Grade)
+class GradeAdmin(admin.ModelAdmin):
+    list_display = (
+        "student_name",
+        "subject",
+        "team",
+        "value",
+        "bimonthly",
+        "registration_date",
+    )
+
+    # FILTROS HIERÁRQUICOS (simulação de pastas)
+    list_filter = (
+        ("bimonthly", admin.RelatedOnlyFieldListFilter),  # primeiro: bimestre
+        ("team", admin.RelatedOnlyFieldListFilter),       # depois: turma
+        "subject",
+    )
+
+    # Navegação por data (opcional)
+    date_hierarchy = "registration_date"
+
+    # Busca inteligente
+    search_fields = (
+        "student__first_name",
+        "student__last_name",
+        "subject__name",
+        "team__name",
+    )
+
+    ordering = ("bimonthly__year", "bimonthly__number", "team__name")
+
+    def student_name(self, obj):
+        return f"{obj.student.first_name} {obj.student.last_name}"
+    student_name.short_description = "Aluno"
+
+
+class AttendanceRecordInline(admin.TabularInline):
+    model = AttendanceRecord
+    extra = 0
+    fields = ("student", "present")
+    ordering = ("student__first_name",)
+
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ("team", "subject", "teacher", "date")
+    list_filter = ("team", "subject", "teacher")
+    date_hierarchy = "date"
+    inlines = [AttendanceRecordInline]
+
+
+
 admin.site.register(Bimonthly)
-admin.site.register(Attendance)
-admin.site.register(AttendanceRecord)

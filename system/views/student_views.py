@@ -4,19 +4,37 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from system.models import CustomUser, Grade, Team
 from system.utiuls.functions import is_aproved
+from functools import wraps
+
 
 logger = logging.getLogger(__name__)
 
 
+
+def aluno_required(view_func):
+    """
+    Bloqueia o acesso de professores (exceto superuser).
+    Elimina repetições nas views.
+    """
+
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+
+        if user.role == "professor" and not user.is_superuser:
+            logger.warning(f"Professor tentou acessar: {request.path}")
+            return redirect("acesso_negado", user_role=user.role)
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
+
+
+@aluno_required
 def my_grades(request, student_id: int):
     user = request.user
     student = get_object_or_404(CustomUser, id=student_id)
 
-    if user != student:
-        logger.warning(
-            f"Professor {request.user.first_name} tentou acessar as notas de um aluno"
-        )
-        return redirect("acesso_negado", user_role=user.role)
 
     team = Team.objects.filter(members=student).first()
 
