@@ -239,7 +239,6 @@ LOGGING = {
         },
     },
     "loggers": {
-        # Logger do Django
         "django": {
             "handlers": ["console", "file"],
             "level": "INFO",
@@ -249,7 +248,6 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        # Logger do seu app SYSTEM
         "system": {
             "handlers": ["debug_file", "info_file", "error_file", "console"],
             "level": "DEBUG",

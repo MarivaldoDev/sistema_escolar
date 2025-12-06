@@ -132,17 +132,14 @@ class GradeAdmin(admin.ModelAdmin):
         "registration_date",
     )
 
-    # FILTROS HIERÁRQUICOS (simulação de pastas)
     list_filter = (
-        ("bimonthly", admin.RelatedOnlyFieldListFilter),  # primeiro: bimestre
-        ("team", admin.RelatedOnlyFieldListFilter),       # depois: turma
+        ("bimonthly", admin.RelatedOnlyFieldListFilter),  
+        ("team", admin.RelatedOnlyFieldListFilter),     
         "subject",
     )
 
-    # Navegação por data (opcional)
     date_hierarchy = "registration_date"
 
-    # Busca inteligente
     search_fields = (
         "student__first_name",
         "student__last_name",
