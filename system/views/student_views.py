@@ -52,6 +52,7 @@ def my_grades(request, student_id: int):
 
     subjects = team.subjects.all()
     subjects_with_grades = []
+    max_bimonthlys = 0
 
     for subject in subjects:
         subject_grades = Grade.objects.filter(
@@ -60,6 +61,8 @@ def my_grades(request, student_id: int):
 
         grade_values = [g.value for g in subject_grades]
         bimonthlys = [str(g.bimonthly) for g in subject_grades]
+        if len(bimonthlys) > max_bimonthlys:
+            max_bimonthlys = len(bimonthlys)
 
         if grade_values:
             aprovado = is_aproved(grade_values, bimonthlys)
@@ -83,7 +86,7 @@ def my_grades(request, student_id: int):
         "subjects_with_grades": sorted(
             subjects_with_grades, key=lambda x: x["subject"].name
         ),
-        "bimonthlys": len(bimonthlys),
+        "bimonthlys": max_bimonthlys,
     }
 
     return render(request, "my_grades.html", context)

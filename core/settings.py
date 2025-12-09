@@ -231,16 +231,10 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "colored",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "logs/app.log"),
-            "level": "DEBUG",
-            "formatter": "default",
-        },
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
             "level": "INFO",
         },
         "django.utils.autoreload": {

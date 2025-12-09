@@ -62,8 +62,7 @@ def search(request):
         subjects = subjects.filter(Q(name__icontains=search_value))
 
     subjects_with_grades = []
-    max_bimonthlys = 0  # Adicione esta linha
-
+    max_bimonthlys = 0 
     for subject in subjects:
         subject_grades = grades.filter(subject=subject, team=team).order_by(
             "bimonthly__number"
@@ -71,7 +70,7 @@ def search(request):
         grade_values = [g.value for g in subject_grades]
         bimonthlys = [str(g.bimonthly) for g in subject_grades]
         if len(bimonthlys) > max_bimonthlys:
-            max_bimonthlys = len(bimonthlys)  # Atualize o máximo
+            max_bimonthlys = len(bimonthlys)
 
         if grade_values:
             aprovado = is_aproved(grade_values, bimonthlys)

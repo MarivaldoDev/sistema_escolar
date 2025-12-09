@@ -44,8 +44,8 @@
                         </ul>
 
                         <p class="media">
-                            Média Final: 
-                            {% if bimonthlys < 4 %}
+                            Média Final:
+                            {% if bimonthlys < 4%}
                                 <em>Aguardando todos os bimestres finalizarem.</em>
                             {% else %}
                                 {% if item.media %}
@@ -59,10 +59,14 @@
                             {% if bimonthlys < 4 %}
                                 {{ "" }}
                             {% else %}
-                                {% if item.status == "Aprovado" %}
-                                    <span class="badge aprovado">Aprovado ✅</span>
+                                {% if item.grades|length < bimonthlys %}
+                                    <em>Aguardando todas as notas serem lançadas.</em>
                                 {% else %}
-                                    <span class="badge reprovado">Reprovado ❌</span>
+                                    {% if item.status == "Aprovado" %}
+                                        <span class="badge aprovado">Aprovado ✅</span>
+                                    {% else %}
+                                        <span class="badge reprovado">Reprovado ❌</span>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </p>
