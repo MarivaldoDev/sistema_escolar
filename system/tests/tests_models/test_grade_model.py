@@ -19,10 +19,15 @@ def test_str_method():
     subject = Subject.objects.create(name="Programação")
     bimonthly = Bimonthly.objects.create(number=1, year=2025)
     grade = Grade.objects.create(
-        student=aluno, subject=subject, team=team, value=9.5, bimonthly=bimonthly
+        student=aluno,
+        subject=subject,
+        team=team,
+        value_activity=9.0,
+        value=9.5,
+        bimonthly=bimonthly,
     )
 
-    assert str(grade) == "Pedro Silva (1º Bimestre/2025) - Programação: 9.5"
+    assert str(grade) == "Pedro Silva (1º Bimestre/2025) - Programação: 9.25"
 
 
 @pytest.mark.django_db
@@ -40,7 +45,12 @@ def test_nota_menor_que_zero():
     subject = Subject.objects.create(name="Programação")
     bimonthly = Bimonthly.objects.create(number=1, year=2025)
     grade = Grade.objects.create(
-        student=aluno, subject=subject, team=team, value=-1.0, bimonthly=bimonthly
+        student=aluno,
+        subject=subject,
+        team=team,
+        value_activity=-1.0,
+        value=-1.0,
+        bimonthly=bimonthly,
     )
 
     with pytest.raises(ValidationError):
@@ -62,7 +72,12 @@ def test_nota_maior_que_dez():
     subject = Subject.objects.create(name="Programação")
     bimonthly = Bimonthly.objects.create(number=1, year=2025)
     grade = Grade.objects.create(
-        student=aluno, subject=subject, team=team, value=11.0, bimonthly=bimonthly
+        student=aluno,
+        subject=subject,
+        team=team,
+        value_activity=11.0,
+        value=11.0,
+        bimonthly=bimonthly,
     )
 
     with pytest.raises(ValidationError):

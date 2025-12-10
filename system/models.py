@@ -3,7 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from .utiuls.functions import generate_unique_registration_number, send_welcome_email
+from .utiuls.functions import (generate_unique_registration_number,
+                               send_welcome_email)
 
 # senha_geral: Abc123@00
 
@@ -135,6 +136,7 @@ class Grade(models.Model):
     )
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True, blank=True)
+    value_activity = models.FloatField()
     value = models.FloatField()
     bimonthly = models.ForeignKey("Bimonthly", on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -143,10 +145,14 @@ class Grade(models.Model):
         return f"{self.student.first_name} {self.student.last_name} ({self.bimonthly}) - {self.subject.name}: {self.value}"
 
     def clean(self):
-        if self.value < 0.0:
-            raise ValidationError("A nota não pode ser menor que 0.0.")
-        if self.value > 10.0:
-            raise ValidationError("A nota não pode ser maior que 10.0.")
+        if self.value_activity < 0 or self.value < 0.0:
+            raise ValidationError("Nenhuma nota pode ser menor que 0.0.")
+        if self.value_activity > 10.0 or self.value > 10.0:
+            raise ValidationError("Nenhuma nota pode ser maior que 10.0.")
+
+    def save(self, *args, **kwargs):
+        self.value = (self.value_activity + self.value) / 2
+        super().save(*args, **kwargs)
 
 
 class Bimonthly(models.Model):

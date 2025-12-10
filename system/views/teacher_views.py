@@ -1,54 +1,28 @@
 import datetime
 import logging
-from functools import wraps
 from collections import defaultdict
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
+from system.decorators.decorators import professor_required
 from system.forms import GradeForm, GradeUpdateForm
-from system.models import (
-    Attendance,
-    AttendanceRecord,
-    Bimonthly,
-    CustomUser,
-    Grade,
-    Subject,
-    Team,
-)
+from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
+                           Grade, Subject, Team)
 from system.utiuls.functions import is_aproved
 
 logger = logging.getLogger(__name__)
 
 
-
-def professor_required(view_func):
-    """
-    Bloqueia o acesso de alunos (exceto superuser).
-    Elimina repetições nas views.
-    """
-
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        user = request.user
-
-        if user.role == "aluno" and not user.is_superuser:
-            logger.warning(f"Aluno tentou acessar: {request.path}")
-            return redirect("acesso_negado", user_role=user.role)
-
-        return view_func(request, *args, **kwargs)
-
-    return wrapper
-
-
+@login_required(login_url="login")
 @professor_required
 def escolher_materia(request, team_id: int):
     user = request.user
 
     turma = get_object_or_404(
-        Team.objects.prefetch_related("subjects__teachers"),
-        id=team_id
+        Team.objects.prefetch_related("subjects__teachers"), id=team_id
     )
 
     if user.role == "professor" and not user.is_superuser:
@@ -70,14 +44,14 @@ def escolher_materia(request, team_id: int):
     )
 
 
+@login_required(login_url="login")
 @professor_required
 def turmas(request):
     user = request.user
 
     if user.role == "professor" and not user.is_superuser:
         turmas = (
-            Team.objects
-            .filter(subjects__teachers=user)
+            Team.objects.filter(subjects__teachers=user)
             .distinct()
             .prefetch_related("subjects")
         )
@@ -87,29 +61,22 @@ def turmas(request):
     return render(request, "turmas.html", {"turmas": turmas})
 
 
+@login_required(login_url="login")
 @professor_required
 def turma_detail(request, team_id: int, subject_id: int):
     user = request.user
 
-    turma = get_object_or_404(
-        Team.objects.prefetch_related("members"),
-        id=team_id
-    )
+    turma = get_object_or_404(Team.objects.prefetch_related("members"), id=team_id)
 
     if user.role == "professor" and not user.is_superuser:
-        subject = get_object_or_404(
-            turma.subjects.filter(teachers=user),
-            id=subject_id
-        )
+        subject = get_object_or_404(turma.subjects.filter(teachers=user), id=subject_id)
     else:
         subject = get_object_or_404(turma.subjects, id=subject_id)
 
     alunos = list(turma.members.all())
 
-    grades_qs = (
-        Grade.objects
-        .filter(team=turma, subject=subject)
-        .select_related("bimonthly", "student")
+    grades_qs = Grade.objects.filter(team=turma, subject=subject).select_related(
+        "bimonthly", "student"
     )
 
     grades_by_student = defaultdict(list)
@@ -118,14 +85,19 @@ def turma_detail(request, team_id: int, subject_id: int):
         try:
             value_float = float(value)
         except Exception:
-            logger.debug("Nota com valor inválido ignorada", extra={
-                "grade_id": getattr(g, "id", None),
-                "student_id": getattr(g.student, "id", None),
-                "raw_value": value,
-            })
+            logger.debug(
+                "Nota com valor inválido ignorada",
+                extra={
+                    "grade_id": getattr(g, "id", None),
+                    "student_id": getattr(g.student, "id", None),
+                    "raw_value": value,
+                },
+            )
             continue
 
-        grades_by_student[g.student_id].append({"value": value_float, "bimonthly": str(g.bimonthly)})
+        grades_by_student[g.student_id].append(
+            {"value": value_float, "bimonthly": str(g.bimonthly)}
+        )
 
     bimestres_all = list(Bimonthly.objects.all().order_by("number"))
     bimes_count = len(bimestres_all)
@@ -136,16 +108,22 @@ def turma_detail(request, team_id: int, subject_id: int):
         grades_values = [item["value"] for item in aluno_grades_info]
         bimes_list = [item["bimonthly"] for item in aluno_grades_info]
 
+        aluno.total_notas = len(grades_values)
+        aluno.is_under_review = bimes_count == 4 and aluno.total_notas < 4
+
         if grades_values:
             try:
                 aprovado = is_aproved(grades_values, bimes_list)
             except Exception as e:
-                # Se is_aproved lançar erro, loga e considera reprovado por segurança
-                logger.error("Erro em is_aproved", exc_info=True, extra={
-                    "student_id": aluno.id,
-                    "grades_values": grades_values,
-                    "bimes": bimes_list,
-                })
+                logger.error(
+                    "Erro em is_aproved",
+                    exc_info=True,
+                    extra={
+                        "student_id": aluno.id,
+                        "grades_values": grades_values,
+                        "bimes": bimes_list,
+                    },
+                )
                 aprovado = False
 
             aluno.status = "aprovado" if aprovado else "reprovado"
@@ -171,6 +149,7 @@ def turma_detail(request, team_id: int, subject_id: int):
     )
 
 
+@login_required(login_url="login")
 @professor_required
 def add_grade(request, team_id: int, subject_id: int, student_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
@@ -198,7 +177,12 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
                 return render(
                     request,
                     "add_grade.html",
-                    {"form": form, "student": student, "subject": subject, "team": team},
+                    {
+                        "form": form,
+                        "student": student,
+                        "subject": subject,
+                        "team": team,
+                    },
                 )
 
             grade.save()
@@ -217,6 +201,7 @@ def add_grade(request, team_id: int, subject_id: int, student_id: int):
     )
 
 
+@login_required(login_url="login")
 @professor_required
 def update_grade(
     request, team_id: int, subject_id: int, student_id: int, bimonthly_id: int = None
@@ -282,6 +267,7 @@ def update_grade(
     )
 
 
+@login_required(login_url="login")
 @professor_required
 def fazer_chamada(request, team_id: int, subject_id: int):
     team = get_object_or_404(Team, id=team_id)
@@ -318,7 +304,8 @@ def fazer_chamada(request, team_id: int, subject_id: int):
 
     registros = (
         {r.student_id: r.present for r in attendance.records.all()}
-        if attendance else {}
+        if attendance
+        else {}
     )
 
     if attendance:

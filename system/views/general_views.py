@@ -62,7 +62,7 @@ def search(request):
         subjects = subjects.filter(Q(name__icontains=search_value))
 
     subjects_with_grades = []
-    max_bimonthlys = 0 
+    max_bimonthlys = 0
     for subject in subjects:
         subject_grades = grades.filter(subject=subject, team=team).order_by(
             "bimonthly__number"
@@ -103,7 +103,7 @@ def search(request):
     )
 
 
-def acesso_negado(request, user_role: str):
+def acesso_negado(request, mensagem: str):
     return HttpResponseForbidden(
-        render(request, "acesso_negado.html", {"user_role": user_role})
+        render(request, "acesso_negado.html", {"mensagem": mensagem})
     )

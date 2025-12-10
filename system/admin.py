@@ -1,15 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import (
-    Attendance,
-    AttendanceRecord,
-    Bimonthly,
-    CustomUser,
-    Grade,
-    Subject,
-    Team,
-)
+from .models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
+                     Grade, Subject, Team)
 
 
 @admin.register(CustomUser)
@@ -133,8 +126,8 @@ class GradeAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        ("bimonthly", admin.RelatedOnlyFieldListFilter),  
-        ("team", admin.RelatedOnlyFieldListFilter),     
+        ("bimonthly", admin.RelatedOnlyFieldListFilter),
+        ("team", admin.RelatedOnlyFieldListFilter),
         "subject",
     )
 
@@ -151,6 +144,7 @@ class GradeAdmin(admin.ModelAdmin):
 
     def student_name(self, obj):
         return f"{obj.student.first_name} {obj.student.last_name}"
+
     student_name.short_description = "Aluno"
 
 
@@ -167,7 +161,6 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_filter = ("team", "subject", "teacher")
     date_hierarchy = "date"
     inlines = [AttendanceRecordInline]
-
 
 
 admin.site.register(Bimonthly)

@@ -38,14 +38,26 @@ class LoginForm(forms.Form):
 class GradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ("value", "bimonthly")
+        fields = ("value_activity", "value", "bimonthly")
         labels = {
-            "value": "Nota",
+            "value_activity": "Nota da Atividade",
+            "value": "Nota da Avaliação",
             "bimonthly": "Bimestre",
         }
         widgets = {
+            "value_activity": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "step": "0.01",
+                    "placeholder": "Nota da Atividade",
+                }
+            ),
             "value": forms.NumberInput(
-                attrs={"class": "form-control", "step": "0.01", "placeholder": "Nota"}
+                attrs={
+                    "class": "form-control",
+                    "step": "0.01",
+                    "placeholder": "Nota da Avaliação",
+                }
             ),
             "bimonthly": forms.Select(
                 attrs={"class": "form-control"},

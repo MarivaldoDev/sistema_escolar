@@ -44,12 +44,15 @@
                 <input type="text" value="{{ subject.name }}" readonly class="readonly-info">
             </div>
 
+            <div class="form-group">
+                {{ form.value_activity.label_tag }}
+                {{ form.value_activity }}
+            </div>
 
             <div class="form-group">
                 {{ form.value.label_tag }}
                 {{ form.value }}
             </div>
-
 
             <div class="form-group">
                 {{ form.bimonthly.label_tag }}

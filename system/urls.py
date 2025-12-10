@@ -44,7 +44,7 @@ urlpatterns = [
         name="fazer_chamada",
     ),
     path(
-        "acesso_negado/<str:user_role>/",
+        "acesso_negado/<str:mensagem>/",
         general_views.acesso_negado,
         name="acesso_negado",
     ),
