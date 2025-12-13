@@ -81,7 +81,7 @@ def turma_detail(request, team_id: int, subject_id: int):
 
     grades_by_student = defaultdict(list)
     for g in grades_qs:
-        value = g.value
+        value = g.average
         try:
             value_float = float(value)
         except Exception:

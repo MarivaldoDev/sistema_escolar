@@ -120,7 +120,7 @@ class GradeAdmin(admin.ModelAdmin):
         "student_name",
         "subject",
         "team",
-        "value",
+        "average",
         "bimonthly",
         "registration_date",
     )

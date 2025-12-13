@@ -23,7 +23,7 @@ def test_str_method():
         subject=subject,
         team=team,
         value_activity=9.0,
-        value=9.5,
+        value_proof=9.5,
         bimonthly=bimonthly,
     )
 
@@ -49,7 +49,7 @@ def test_nota_menor_que_zero():
         subject=subject,
         team=team,
         value_activity=-1.0,
-        value=-1.0,
+        value_proof=-1.0,
         bimonthly=bimonthly,
     )
 
@@ -76,7 +76,7 @@ def test_nota_maior_que_dez():
         subject=subject,
         team=team,
         value_activity=11.0,
-        value=11.0,
+        value_proof=11.0,
         bimonthly=bimonthly,
     )
 

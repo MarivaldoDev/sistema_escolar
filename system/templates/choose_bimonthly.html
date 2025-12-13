@@ -25,7 +25,7 @@
                                 <div class="bim">Bimestre {{ item.bimonthly.number }} ({{ item.bimonthly }})</div>
                                 <div class="note">Nota atual:
                                     {% if item.grade %}
-                                        <span class="badge">{{ item.grade.value }}</span>
+                                        <span class="badge">{{ item.grade.average }}</span>
                                     {% else %}
                                         <span class="badge">—</span>
                                     {% endif %}

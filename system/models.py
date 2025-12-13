@@ -137,21 +137,22 @@ class Grade(models.Model):
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE)
     team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True, blank=True)
     value_activity = models.FloatField()
-    value = models.FloatField()
+    value_proof = models.FloatField()
+    average = models.FloatField(null=True, blank=True)
     bimonthly = models.ForeignKey("Bimonthly", on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.first_name} {self.student.last_name} ({self.bimonthly}) - {self.subject.name}: {self.value}"
+        return f"{self.student.first_name} {self.student.last_name} ({self.bimonthly}) - {self.subject.name}: {self.average}"
 
     def clean(self):
-        if self.value_activity < 0 or self.value < 0.0:
+        if self.value_activity < 0 or self.value_proof < 0.0:
             raise ValidationError("Nenhuma nota pode ser menor que 0.0.")
-        if self.value_activity > 10.0 or self.value > 10.0:
+        if self.value_activity > 10.0 or self.value_proof > 10.0:
             raise ValidationError("Nenhuma nota pode ser maior que 10.0.")
 
     def save(self, *args, **kwargs):
-        self.value = (self.value_activity + self.value) / 2
+        self.average = (self.value_activity + self.value_proof) / 2
         super().save(*args, **kwargs)
 
 
