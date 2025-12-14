@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from system.decorators.decorators import aluno_only, aluno_required
-from system.models import CustomUser, Grade, Team
+from system.models import CustomUser, Grade, Team, Subject
 from system.utiuls.functions import is_aproved
 
 logger = logging.getLogger(__name__)
@@ -71,5 +71,28 @@ def my_grades(request, student_id: int):
     return render(request, "my_grades.html", context)
 
 
-def grade_details(request, student_id: int):
+def grade_details(request, student_id: int, subject_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
+    subject = get_object_or_404(Subject, id=subject_id)
+
+    performance = Grade.objects.filter(student=student, subject=subject).order_by('bimonthly__number')
+    grade_activity = [grade.value_activity for grade in performance]
+    grade_proof = [grade.value_proof for grade in performance]
+    average = [grade.average for grade in performance]
+    bimonthlys = [str(grade.bimonthly) for grade in performance]
+
+    logger.debug(grade_activity)
+    logger.debug(grade_proof)
+    logger.debug(bimonthlys)
+
+    context = {
+        "student": student,
+        "subject": subject,
+        "grade_activity": grade_activity,
+        "grade_proof": grade_proof,
+        "average": average,
+        "bimonthlys": bimonthlys,
+    }
+
+    return render(request, "grade_details.html", context)
+

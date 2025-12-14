@@ -32,7 +32,9 @@
             <ul class="subjects-list">
                 {% for item in subjects_with_grades %}
                     <li class="subject-card">
-                        <h3>{{ item.subject.name }}</h3>
+                        <a href="{% url 'grade_details' student.id item.subject.id %}">
+                            <h3>{{ item.subject.name }}</h3>
+                        </a>
                         
                         <ul class="grades-list">
                             {% for grade in item.grades %}
