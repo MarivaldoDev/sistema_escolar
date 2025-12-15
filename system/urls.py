@@ -38,7 +38,11 @@ urlpatterns = [
         student_views.my_grades,
         name="my_grades",
     ),
-    path("alunos/minhas_notas/<int:student_id>/<int:subject_id>/detail/", student_views.grade_details, name="grade_details"),
+    path(
+        "alunos/minhas_notas/<int:student_id>/<int:subject_id>/detail/",
+        student_views.grade_details,
+        name="grade_details",
+    ),
     path(
         "turma/<int:team_id>/chamada/<int:subject_id>/",
         teacher_views.fazer_chamada,

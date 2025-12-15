@@ -1,16 +1,43 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Detalhes da média — {{ subject.name }}</title>
+    <link rel="stylesheet" href="{% static 'global/css/my_grades.css' %}">
+    <link rel="stylesheet" href="{% static 'global/css/grade_details.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-    <h1>Detalhes da sua média em {{ subject.name }}</h1>
-    <div class="card">
-        <h2>Nota de atividade: {{ grade_activity }}</h2>
-        <h2>Nota de prova: {{ grade_proof }}</h2>
-        <h2>Média final: {{ average }}</h2>
-    </div>
+    <main class="container">
+        <header class="page-header">
+            <a href="{% url 'my_grades' student.id %}" class="back-btn">←</a>
+            <h1>Detalhes da sua média em {{ subject.name }}</h1>
+        </header>
+
+        <section class="gd-card">
+            {% if performances %}
+            <div class="gd-list">
+                {% for performance in performances %}
+                <article class="gd-performance">
+                    <div class="gd-left">
+                        <div class="gd-bimester">{{ performance.bimonthly }}</div>
+                        <div class="gd-item">Atividade: <span class="gd-value">{{ performance.activity }}</span></div>
+                        <div class="gd-item">Prova: <span class="gd-value">{{ performance.proof }}</span></div>
+                    </div>
+                    <div class="gd-right">
+                        <div class="gd-average-label">Média</div>
+                        <div class="gd-average">{{ performance.average }}</div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="gd-empty">Nenhuma nota encontrada para esta disciplina.</p>
+            {% endif %}
+        </section>
+    </main>
 </body>
 </html>
