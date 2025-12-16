@@ -71,6 +71,9 @@ def my_grades(request, student_id: int):
     return render(request, "my_grades.html", context)
 
 
+@login_required(login_url="login")
+@aluno_only
+@aluno_required
 def grade_details(request, student_id: int, subject_id: int):
     student = get_object_or_404(CustomUser, id=student_id)
     subject = get_object_or_404(Subject, id=subject_id)
@@ -91,8 +94,6 @@ def grade_details(request, student_id: int, subject_id: int):
         for g in qs
     ]
 
-    logger.debug("performances=%s", performances)
-
     context = {
         "student": student,
         "subject": subject,
@@ -100,3 +101,4 @@ def grade_details(request, student_id: int, subject_id: int):
     }
 
     return render(request, "grade_details.html", context)
+

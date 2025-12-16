@@ -11,47 +11,46 @@
 <body>
   <header>
     <h1>Sistema de Notas Escolares</h1>
+    <nav>
+        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'login' %}">Login</a>
+    </nav>
   </header>
 
-    <nav>
-      {% if user.is_authenticated %}   
-        <div class="auth-links">
-            <a href="{% url 'logout' %}">Logout</a>
-        </div>
-      {% else %}
-        <div class="auth-links">
-            <a href="{% url 'login' %}">Login</a> 
-            <a href="{% url 'logout' %}">Logout</a>
-        </div>
-      {% endif %}
-    </nav>
+  <main class="container">
+    <section class="intro">
+      <h2>Bem-vindo ao sistema 👋</h2>
+      <p>Gerencie notas, acompanhe desempenho acadêmico e tenha controle total das informações escolares.</p>
+    </section>
 
-  <div class="container">
-    <div class="intro">
-      <h2>Bem-vindo ao Sistema de Notas, {{ user.first_name }}!</h2>
-      <p>Acompanhe o desempenho dos alunos, visualize disciplinas, gerencie turmas e veja os resultados finais.</p>
-    </div>
-    
     {% if user.role == 'professor' %}
-      <div class="cards">
-          <div class="card">
-            <h3>👩‍🏫 Minhas Turmas</h3>
-            <p>Tenha o controle sobre as turmas que você leciona.</p>
-            <a href="{% url 'turmas' %}" class="btn">Acessar</a>
-          </div>
-      </div>
+      <section class="cards">
+        <div class="card">
+          <h3>👩‍🏫 Minhas Turmas</h3>
+          <p>Gerencie suas turmas, visualize alunos e registre avaliações.</p>
+          <a href="{% url 'turmas' %}" class="btn">Acessar</a>
+        </div>
+      </section>
+
     {% elif user.role == 'aluno' %}
-      <div class="cards">
-          <div class="card">
-            <h3>📝 Minhas Notas</h3>
-            <p>Confira suas notas e desempenho acadêmico.</p>
-            <a href="{% url 'my_grades' user.id %}" class="btn">Acessar</a>
-          </div>
-      </div>
+      <section class="cards">
+        <div class="card">
+          <h3>📝 Minhas Notas</h3>
+          <p>Acompanhe suas notas, médias e situação final.</p>
+          <a href="{% url 'my_grades' user.id %}" class="btn">Acessar</a>
+        </div>
+
+        <div class="card">
+          <h3>📝 Minhas Faltas</h3>
+          <p>Acompanhe suas notas, médias e situação final.</p>
+          <a href="{% url 'my_grades' user.id %}" class="btn">Acessar</a>
+        </div>
+      </section>
     {% endif %}
-  </div>
+  </main>
+
   <footer>
-    <p>&copy; 2025 Sistema de Notas | Desenvolvido em Django + Python</p>
+    &copy; 2025 • Sistema de Notas | Django + Python
   </footer>
 </body>
 </html>

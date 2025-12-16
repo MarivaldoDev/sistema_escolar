@@ -29,7 +29,11 @@
                     </div>
                     <div class="gd-right">
                         <div class="gd-average-label">Média</div>
-                        <div class="gd-average">{{ performance.average }}</div>
+                        {% if performance.average < 6 %}
+                            <div class="gd-average-red">{{ performance.average }}</div>
+                        {% else %}
+                            <div class="gd-average-green">{{ performance.average }}</div>
+                        {% endif %}
                     </div>
                 </article>
                 {% endfor %}
