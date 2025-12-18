@@ -1,11 +1,13 @@
 import logging
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from system.decorators.decorators import aluno_only, aluno_required
-from system.models import CustomUser, Grade, Subject, Team
+from system.models import CustomUser, Grade, Subject, Team, AttendanceRecord
 from system.utiuls.functions import is_aproved
+
 
 logger = logging.getLogger(__name__)
 
@@ -102,3 +104,46 @@ def grade_details(request, student_id: int, subject_id: int):
 
     return render(request, "grade_details.html", context)
 
+
+@login_required(login_url="login")
+@aluno_only
+@aluno_required
+def my_fouls(request, student_id: int):
+    student = get_object_or_404(CustomUser, id=student_id)
+    team = Team.objects.filter(members=student).first()
+    subjects = team.subjects.all() if team else Subject.objects.none()
+
+    subject_pk = request.GET.get("subject") 
+    month_str = request.GET.get("month")  
+
+    fouls_qs = (
+        AttendanceRecord.objects.filter(student=student, present=False)
+        .select_related("attendance__subject")
+        .order_by("attendance__date")
+    )
+
+    if subject_pk:
+        fouls_qs = fouls_qs.filter(attendance__subject_id=subject_pk)
+
+    if month_str:
+        logger.debug(month_str)
+        try:
+            dt = datetime.strptime(month_str, "%Y-%m")
+            fouls_qs = fouls_qs.filter(
+                attendance__date__year=dt.year, attendance__date__month=dt.month
+            )
+        except ValueError:
+            pass
+
+    logger.debug(f"fouls filter: {fouls_qs}")
+
+    context = {
+        "student": student,
+        "subjects": subjects,
+        "fouls": fouls_qs,
+        "fouls_count": fouls_qs.count(),
+        "selected_subject": subject_pk or "",
+        "selected_month": month_str or "",
+    }
+
+    return render(request, "my_fouls.html", context)

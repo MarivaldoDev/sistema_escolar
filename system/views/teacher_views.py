@@ -246,6 +246,7 @@ def update_grade(
             grade.team = team
             grade.bimonthly = bimonthly
             grade.save()
+            
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
         for erro in form.errors.get("__all__", []):

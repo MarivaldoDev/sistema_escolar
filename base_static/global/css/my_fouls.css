@@ -1,0 +1,273 @@
+/* ===========================
+   RESET
+=========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===========================
+   BASE
+=========================== */
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.header-info h1 {
+    font-size: 1.8rem;
+    color: #1f2937;
+}
+
+.header-info p {
+    color: #6b7280;
+}
+
+/* ===========================
+   BOTÃO VOLTAR
+=========================== */
+.back-btn {
+    width: 42px;
+    height: 42px;
+    background: #4c1d95;
+    color: #ffffff;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #6d28d9;
+    transform: scale(1.08);
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ===========================
+   FILTROS
+=========================== */
+.filter-section {
+    margin-bottom: 32px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-group select,
+.form-group input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+}
+
+#month {
+    width: 220px;
+}
+
+/* ===========================
+   BOTÃO
+=========================== */
+.btn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* ===========================
+   RESUMO
+=========================== */
+.summary {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary h2 {
+    font-size: 1.1rem;
+    color: #374151;
+}
+
+.summary .total {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #dc2626;
+}
+
+/* ===========================
+   LISTA DE FALTAS
+=========================== */
+.fouls-section h2 {
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    color: #1f2937;
+}
+
+.fouls-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.foul-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.foul-card .date {
+    font-weight: 600;
+    color: #374151;
+}
+
+.foul-card .subject {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ===========================
+   EMPTY
+=========================== */
+.empty {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.messages {
+  margin-bottom: 16px;
+}
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.alert.success {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.alert.error {
+  background: #fdecea;
+  color: #b02a37;
+}
+
+.alert.warning {
+  background: #fff4e5;
+  color: #9c6b00;
+}
+
+.alert.info {
+  background: #e7f1ff;
+  color: #084298;
+}
+
+/* ===========================
+   RESPONSIVO
+=========================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px;
+    }
+
+    .summary {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 18px;
+        border-radius: 10px;
+    }
+
+    .header-info h1 {
+        font-size: 1.5rem;
+    }
+
+    .back-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+}
