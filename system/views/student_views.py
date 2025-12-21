@@ -133,7 +133,6 @@ def my_fouls(request, student_id: int):
         except ValueError:
             pass
 
-
     context = {
         "student": student,
         "subjects": subjects,

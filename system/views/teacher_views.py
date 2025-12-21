@@ -6,14 +6,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
+from notifications.signals import notify
 
 from system.decorators.decorators import professor_required
 from system.forms import GradeForm, GradeUpdateForm, NotificationForm
 from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
                            Grade, Subject, Team)
 from system.utiuls.functions import is_aproved
-from notifications.signals import notify
-
 
 logger = logging.getLogger(__name__)
 
@@ -335,7 +334,7 @@ def enviar_avisos(request):
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             recipient = form.cleaned_data["recipient"]
-            
+
             # Enviar notificação para cada membro da turma selecionada
             members = recipient.members.all() if recipient else []
             for member in members:
