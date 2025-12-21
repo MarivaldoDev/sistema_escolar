@@ -8,10 +8,12 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from system.decorators.decorators import professor_required
-from system.forms import GradeForm, GradeUpdateForm
+from system.forms import GradeForm, GradeUpdateForm, NotificationForm
 from system.models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
                            Grade, Subject, Team)
 from system.utiuls.functions import is_aproved
+from notifications.signals import notify
+
 
 logger = logging.getLogger(__name__)
 
@@ -246,7 +248,7 @@ def update_grade(
             grade.team = team
             grade.bimonthly = bimonthly
             grade.save()
-            
+
             return redirect("turma_detail", team_id=team_id, subject_id=subject_id)
 
         for erro in form.errors.get("__all__", []):
@@ -322,3 +324,34 @@ def fazer_chamada(request, team_id: int, subject_id: int):
             "registros": registros,
         },
     )
+
+
+@login_required(login_url="login")
+@professor_required
+def enviar_avisos(request):
+    if request.method == "POST":
+        form = NotificationForm(request.POST, user=request.user)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["content"]
+            recipient = form.cleaned_data["recipient"]
+            
+            # Enviar notificação para cada membro da turma selecionada
+            members = recipient.members.all() if recipient else []
+            for member in members:
+                notify.send(
+                    sender=request.user,
+                    verb=title,
+                    description=content,
+                    recipient=member,
+                    actor=request.user,
+                )
+
+            messages.success(request, "Aviso enviado com sucesso!")
+            return redirect("create_notification")
+        else:
+            messages.error(request, "Por favor, corrija os erros abaixo.")
+    else:
+        form = NotificationForm(user=request.user)
+
+    return render(request, "enviar_avisos.html", {"form": form})

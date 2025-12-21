@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import AttendanceRecord, CustomUser, Grade
+from .models import AttendanceRecord, CustomUser, Grade, Team
 
 
 class LoginForm(forms.Form):
@@ -109,3 +109,22 @@ class AttendanceForm(forms.ModelForm):
     class Meta:
         model = AttendanceRecord
         fields = ["present"]
+
+
+class NotificationForm(forms.Form):
+    title = forms.CharField(max_length=100, label="Título")
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 15}), label="Conteúdo"
+    )
+    recipient = forms.ModelChoiceField(
+        queryset=Team.objects.none(), label="Destinatário"
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user and getattr(user, "role", "").lower() == "professor":
+            self.fields["recipient"].queryset = Team.objects.filter(
+                subjects__teachers=user
+            ).distinct()
+        else:
+            self.fields["recipient"].queryset = Team.objects.none()

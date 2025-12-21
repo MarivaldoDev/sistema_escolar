@@ -5,16 +5,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from ..forms import LoginForm
 from ..models import CustomUser, Grade, Team
 from ..utiuls.functions import is_aproved
+from ..notifications import get_unread_notifications
+from notifications.models import Notification
+
 
 logger = logging.getLogger(__name__)
 
 
 def home(request):
-    return render(request, "home.html")
+    unread_notifications_count = get_unread_notifications(request.user).count() if request.user.is_authenticated else 0
+    return render(request, "home.html", {"unread_notifications_count": unread_notifications_count})
 
 
 def my_login(request):
@@ -107,3 +112,13 @@ def acesso_negado(request, mensagem: str):
     return HttpResponseForbidden(
         render(request, "acesso_negado.html", {"mensagem": mensagem})
     )
+
+
+def list_notifications(request):
+    unread_notifications = get_unread_notifications(request.user)
+    return render(request, "notifications.html", {"notifications": unread_notifications})
+
+
+def mark_notifications_as_read(request):
+    Notification.objects.mark_all_as_read(recipient=request.user)
+    return reverse(redirect("list_notifications"))

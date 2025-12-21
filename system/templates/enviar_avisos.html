@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Aviso</title>
+  <link rel="stylesheet" href="{% static 'global/css/enviar_avisos.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
+</head>
+<body>
+
+<header class="page-header">
+  <a href="{% url 'home' %}" class="back-btn">←</a>
+
+  <div class="header-info">
+    <h1>Novo Aviso</h1>
+    <p>Envie um comunicado para os usuários</p>
+  </div>
+</header>
+
+<main class="container">
+
+    {% if messages %}
+        <section class="messages">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+        </section>
+  {% endif %}
+
+  <form action="{% url 'create_notification' %}" method="POST" class="form-card">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+
+        {% if field.errors %}
+          <span class="error">{{ field.errors|striptags }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        Enviar Aviso
+      </button>
+    </div>
+  </form>
+
+</main>
+
+<footer class="footer">
+  Sistema de Notas © 2025
+</footer>
+
+</body>
+</html>

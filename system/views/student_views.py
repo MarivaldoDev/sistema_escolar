@@ -5,9 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from system.decorators.decorators import aluno_only, aluno_required
-from system.models import CustomUser, Grade, Subject, Team, AttendanceRecord
+from system.models import AttendanceRecord, CustomUser, Grade, Subject, Team
 from system.utiuls.functions import is_aproved
-
 
 logger = logging.getLogger(__name__)
 
@@ -113,8 +112,8 @@ def my_fouls(request, student_id: int):
     team = Team.objects.filter(members=student).first()
     subjects = team.subjects.all() if team else Subject.objects.none()
 
-    subject_pk = request.GET.get("subject") 
-    month_str = request.GET.get("month")  
+    subject_pk = request.GET.get("subject")
+    month_str = request.GET.get("month")
 
     fouls_qs = (
         AttendanceRecord.objects.filter(student=student, present=False)
@@ -126,7 +125,6 @@ def my_fouls(request, student_id: int):
         fouls_qs = fouls_qs.filter(attendance__subject_id=subject_pk)
 
     if month_str:
-        logger.debug(month_str)
         try:
             dt = datetime.strptime(month_str, "%Y-%m")
             fouls_qs = fouls_qs.filter(
@@ -135,7 +133,6 @@ def my_fouls(request, student_id: int):
         except ValueError:
             pass
 
-    logger.debug(f"fouls filter: {fouls_qs}")
 
     context = {
         "student": student,

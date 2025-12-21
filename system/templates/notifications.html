@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sala de Avisos</title>
+  <link rel="stylesheet" href="{% static 'global/css/notifications.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
+</head>
+<body>
+
+<header class="page-header">
+  <a href="{% url 'home' %}" class="back-btn">←</a>
+
+  <div class="header-info">
+    <h1>Sala de Avisos</h1>
+    <p>Comunicados importantes da escola</p>
+  </div>
+
+  {% if user.role == 'professor' or user.is_staff %}
+    <a href="{% url 'criar_aviso' %}" class="btn btn-primary">Novo aviso</a>
+  {% endif %}
+</header>
+
+<main class="container">
+
+  {% if messages %}
+    <section class="messages">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <section class="avisos-section">
+    {% for aviso in notifications %}
+      <article class="aviso-card">
+        <header class="aviso-header">
+          <h2>{{ aviso.verb }}</h2>
+          <span class="data">{{ aviso.created_at|date:"d/m/Y" }}</span>
+        </header>
+
+        <p class="aviso-content">
+          {{ aviso.description|linebreaksbr }}
+        </p>
+
+        <footer class="aviso-footer">
+          <span class="autor">Publicado por {{ aviso.actor }}</span>
+
+            <div class="acoes">
+              <a href="{% url 'mark_notifications_as_read' %}" class="btn btn-editar">Marcar como lida</a>
+            </div>
+        </footer>
+      </article>
+    {% empty %}
+      <p class="empty">Nenhum aviso publicado até o momento.</p>
+    {% endfor %}
+  </section>
+
+</main>
+
+<footer class="footer">
+  Sistema de Notas © 2025
+</footer>
+
+</body>
+</html>

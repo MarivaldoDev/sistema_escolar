@@ -43,12 +43,19 @@ urlpatterns = [
         student_views.grade_details,
         name="grade_details",
     ),
-    path("alunos/minhas_faltas/<int:student_id>/", student_views.my_fouls, name="my_fouls"),
+    path(
+        "alunos/minhas_faltas/<int:student_id>/",
+        student_views.my_fouls,
+        name="my_fouls",
+    ),
     path(
         "turma/<int:team_id>/chamada/<int:subject_id>/",
         teacher_views.fazer_chamada,
         name="fazer_chamada",
     ),
+    path("create_notification/", teacher_views.enviar_avisos, name="create_notification"),
+    path("list_notifications/", general_views.list_notifications, name="notifications"),
+    path("mark_notifications_as_read/", general_views.mark_notifications_as_read, name="mark_notifications_as_read"),
     path(
         "acesso_negado/<str:mensagem>/",
         general_views.acesso_negado,
