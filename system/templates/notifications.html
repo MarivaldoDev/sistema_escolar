@@ -23,6 +23,14 @@
   {% endif %}
 </header>
 
+  {% if notifications %}
+    <div class="top-actions">
+      <a href="{% url 'mark_notifications_as_read' %}" class="btn btn-editar">
+        Marcar todas como lidas
+      </a>
+    </div>
+  {% endif %}
+
 <main class="container">
 
   {% if messages %}
@@ -47,10 +55,6 @@
 
         <footer class="aviso-footer">
           <span class="autor">Publicado por {{ aviso.actor }}</span>
-
-            <div class="acoes">
-              <a href="{% url 'mark_notifications_as_read' %}" class="btn btn-editar">Marcar como lida</a>
-            </div>
         </footer>
       </article>
     {% empty %}

@@ -128,4 +128,4 @@ def list_notifications(request):
 
 def mark_notifications_as_read(request):
     Notification.objects.mark_all_as_read(recipient=request.user)
-    return reverse(redirect("list_notifications"))
+    return redirect(reverse("list_notifications"))

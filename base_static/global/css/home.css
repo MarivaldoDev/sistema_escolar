@@ -115,17 +115,21 @@ nav a:hover {
     background-color: #1e3c72;
 }
 
-.notification {
+/* ===========================
+   NOTIFICATION BADGE
+=========================== */
+
+.card.notification {
   position: relative;
 }
 
 .notification-count {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  min-width: 20px;
-  height: 20px;
-  background: #dc2626;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  min-width: 22px;
+  height: 22px;
+  background: #dc2626; /* vermelho institucional */
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -134,8 +138,26 @@ nav a:hover {
   align-items: center;
   justify-content: center;
   padding: 0 6px;
-  box-shadow: 0 0 0 2px #ffffff;
+  box-shadow: 0 0 0 2px #ffffff; /* separação do card */
+  z-index: 10;
 }
+
+.notification-count {
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 /* FOOTER */
 footer {
