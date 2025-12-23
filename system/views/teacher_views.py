@@ -334,7 +334,7 @@ def enviar_avisos(request):
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             recipient = form.cleaned_data["recipient"]
-
+    
             # Enviar notificação para cada membro da turma selecionada
             members = recipient.members.all() if recipient else []
             for member in members:

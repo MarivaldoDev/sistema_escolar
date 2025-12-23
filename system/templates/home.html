@@ -11,7 +11,10 @@
 <body>
   <header>
     <h1>Sistema de Notas Escolares</h1>
-    <nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="nav-toggle" aria-expanded="false" aria-label="Abrir menu">☰</button>
+    </div>
+    <nav class="nav-menu">
       {% if user.is_authenticated %}
         <a href="{% url 'logout' %}">Logout</a>
       {% else %}
@@ -29,31 +32,34 @@
     {% if user.role == 'professor' %}
       <section class="cards">
         <div class="card">
-          <h3>👩‍🏫 Minhas Turmas</h3>
-          <p>Gerencie suas turmas, visualize alunos e registre avaliações.</p>
-          <a href="{% url 'turmas' %}" class="btn">Acessar</a>
+         <a href="{% url 'turmas' %}" class="link">
+            <h3>👩‍🏫 Minhas Turmas</h3>
+            <p>Gerencie suas turmas, visualize alunos e registre avaliações.</p>
+          </a>
         </div>
 
         <div class="card">
-
-          <h3>⚠️ Enviar Avisos</h3>
-          <p>Envie comunicados importantes para suas turmas.</p>
-          <a href="{% url 'create_notification' %}" class="btn">Acessar</a>
+          <a href="{% url 'create_notification' %}" class="link">
+            <h3>⚠️ Sala de avisos</h3>
+            <p>Fique atento às últimas notificações e comunicados importantes.</p>
+          </a>
         </div>
       </section>
 
     {% elif user.role == 'aluno' %}
       <section class="cards">
         <div class="card">
-          <h3>📝 Minhas Notas</h3>
-          <p>Acompanhe suas notas, médias e situação final.</p>
-          <a href="{% url 'my_grades' user.id %}" class="btn">Acessar</a>
+          <a href="{% url 'my_grades' user.id %}" class="link">
+            <h3>📝 Minhas Notas</h3>
+            <p>Acompanhe suas notas, médias e situação final.</p>
+          </a>
         </div>
 
         <div class="card">
-          <h3> ⛔ Minhas Faltas</h3>
-          <p>Tenha controle sobre suas faltas e frequência.</p>
-          <a href="{% url 'my_fouls' user.id %}" class="btn">Acessar</a>
+          <a href="{% url 'my_fouls' user.id %}" class="link">
+            <h3> ⛔ Minhas Faltas</h3>
+            <p>Tenha controle sobre suas faltas e frequência.</p>
+          </a>
         </div>
 
         <div class="card notification">
@@ -62,9 +68,11 @@
               {{ unread_notifications_count }}
             </span>
           {% endif %}
-          <h3>⚠️ Sala de avisos</h3>
-          <p>Fique atento às últimas notificações e comunicados importantes.</p>
-          <a href="{% url 'list_notifications' %}" class="btn">Acessar</a>
+          <a href="{% url 'list_notifications' %}" class="link">
+            <h3>⚠️ Sala de avisos</h3>
+            <p>Fique atento às últimas notificações e comunicados importantes.</p>
+          </a>
+          <!-- <a href="{% url 'list_notifications' %}" class="btn">Acessar</a> -->
         </div>
       </section>
     {% endif %}
@@ -73,5 +81,7 @@
   <footer>
     &copy; 2025 • Sistema de Notas | Django + Python
   </footer>
+  <script src="{% static 'global/js/home.js' %}" defer></script>
+  <script src="{% static 'global/js/theme.js' %}" defer></script>
 </body>
 </html>

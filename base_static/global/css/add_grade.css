@@ -156,3 +156,12 @@ header nav a:hover {
         font-size: 16px;
     }
 }
+
+@media (max-width: 380px) {
+    header { padding: 12px; }
+    header h1 { font-size: 15px; text-align: center; }
+    .form-container { padding: 16px; margin: 8px; }
+    .form-group label, .readonly-info, .form-group input, .form-group select { font-size: 14px; }
+    .btn-submit { padding: 10px; font-size: 15px; }
+}
+

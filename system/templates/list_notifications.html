@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sala de Avisos</title>
-  <link rel="stylesheet" href="{% static 'global/css/notifications.css' %}">
+  <link rel="stylesheet" href="{% static 'global/css/list_notifications.css' %}">
   <link rel="icon" type="image/x-icon" href="{% static 'global/images/icone.ico' %}">
 </head>
 <body>
@@ -54,7 +54,7 @@
         </p>
 
         <footer class="aviso-footer">
-          <span class="autor">Publicado por {{ aviso.actor }}</span>
+          <span class="autor">Publicado por {{ aviso.actor.first_name }} {{ aviso.actor.last_name }} - {{ subject }} ({{ aviso.timestamp }})</span>
         </footer>
       </article>
     {% empty %}
@@ -68,5 +68,6 @@
   Sistema de Notas © 2025
 </footer>
 
+<script src="{% static 'global/js/theme.js' %}" defer></script>
 </body>
 </html>

@@ -140,9 +140,59 @@ body {
 }
 
 /* RESPONSIVO */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .container {
+    padding: 24px;
+  }
+
   .page-header {
-    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header-info h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .back-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+
+  .header-info h1 {
+    font-size: 1.3rem;
+    margin-top: 8px;
+  }
+
+  .header-info p {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .aviso-card {
+    padding: 16px;
+    border-radius: 12px;
   }
 
   .aviso-header {
@@ -151,9 +201,106 @@ body {
     gap: 6px;
   }
 
+  .aviso-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .aviso-content {
+    font-size: 0.95rem;
+  }
+
   .aviso-footer {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
+
+  .top-actions {
+    margin-bottom: 12px;
+  }
 }
+
+@media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .header-info h1 {
+    font-size: 1.1rem;
+  }
+
+  .header-info p {
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 12px;
+    max-width: 100%;
+  }
+
+  .aviso-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .aviso-header h2 {
+    font-size: 1rem;
+  }
+
+  .aviso-content {
+    font-size: 0.9rem;
+    margin: 12px 0;
+  }
+
+  .btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer {
+    font-size: 0.85rem;
+    margin-top: 20px;
+  }
+}
+
+/* ================================
+   UI Improvements (shared)
+================================ */
+:root {
+  --accent: #2563eb;
+  --accent-600: #1e40af;
+  --radius: 10px;
+  --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+  --shadow-md: 0 12px 40px rgba(16,24,40,0.10);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+button, .btn, a.button {
+  border-radius: var(--radius);
+  transition: box-shadow 200ms ease, transform 160ms ease;
+}
+
+button:focus, a:focus, .btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+}
+
+input, select, textarea { border-radius: 8px; }
+
+.card, .container, .form-container { transition: box-shadow 180ms ease, transform 180ms ease; }
+

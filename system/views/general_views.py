@@ -119,13 +119,6 @@ def acesso_negado(request, mensagem: str):
     )
 
 
-def list_notifications(request):
-    unread_notifications = get_unread_notifications(request.user)
-    return render(
-        request, "notifications.html", {"notifications": unread_notifications}
-    )
-
-
 def mark_notifications_as_read(request):
     Notification.objects.mark_all_as_read(recipient=request.user)
     return redirect(reverse("list_notifications"))

@@ -27,11 +27,27 @@ header h1 {
     font-weight: 600;
 }
 
+.nav-menu {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+
 nav a {
     color: #fff;
     text-decoration: none;
-    margin-left: 20px;
+    margin-left: 0; /* spacing handled by .nav-menu gap */
     font-weight: 500;
+}
+
+.nav-toggle {
+    display: none;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
 }
 
 nav a:hover {
@@ -41,7 +57,7 @@ nav a:hover {
 /* CONTAINER */
 .container {
     max-width: 1200px;
-    margin: 200px auto;
+    margin: 80px auto;
     padding: 0 20px;
 }
 
@@ -53,7 +69,7 @@ nav a:hover {
 .intro h2 {
     font-size: 2.5rem;
     margin-bottom: 15px;
-    color: #4c1d95;
+    color: #4b1c91;
     font-weight: 700;
 }
 
@@ -62,6 +78,11 @@ nav a:hover {
     font-size: 1.1rem;
     max-width: 750px;
     margin: 0 auto;
+}
+
+.link{
+    cursor: pointer;
+    text-decoration: none;
 }
 
 /* ===== CARDS ===== */
@@ -78,8 +99,11 @@ nav a:hover {
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
-    cursor: pointer;
     border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
 }
 
 .card:hover {
@@ -100,7 +124,7 @@ nav a:hover {
 }
 
 .btn {
-    align-self: flex-start;
+    align-self: center;
     padding: 12px 18px;
     background-color: #2a5298;
     color: #fff;
@@ -172,7 +196,149 @@ footer {
 @media (max-width: 768px) {
     header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     }
+
+    header h1 {
+        margin-top: 8px;
+    }
 }
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: inline-block;
+        align-self: flex-end;
+    }
+    .nav-menu {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 8px;
+    }
+    .nav-menu.open {
+        display: flex;
+    }
+    .nav-menu a {
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 6px;
+    }
+}
+
+/* Additional responsive tweaks */
+@media (max-width: 1024px) {
+    .container {
+        margin: 120px auto;
+    }
+    .intro h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 16px 20px;
+        align-items: center;
+    }
+    header h1 {
+        font-size: 18px;
+        margin-top: 8px;
+    }
+    nav a {
+        margin-left: 12px;
+        display: inline-block;
+    }
+    .container {
+        margin: 40px auto;
+        padding: 0 16px;
+    }
+    .intro h2 {
+        font-size: 1.6rem;
+    }
+    .intro p {
+        font-size: 1rem;
+    }
+    .cards {
+        gap: 20px;
+    }
+    .card {
+        padding: 20px;
+    }
+    .notification-count {
+        top: 10px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 6px 14px;
+    }
+    header h1 {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+    .container {
+        margin: 30px 12px;
+        padding: 0 12px;
+    }
+    .intro h2 {
+        font-size: 1.3rem;
+    }
+    .intro p {
+        font-size: 0.95rem;
+    }
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .card h3 {
+        font-size: 1.05rem;
+    }
+    .card p {
+        font-size: 0.9rem;
+    }
+    .btn {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    footer {
+        font-size: 16px;
+        padding: 20px;
+    }
+}
+
+/* ================================
+     UI Improvements (shared)
+================================ */
+:root {
+    --accent: #2563eb;
+    --accent-600: #1e40af;
+    --radius: 10px;
+    --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+    --shadow-md: 0 12px 40px rgba(16,24,40,0.10);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+button, .btn, a.button {
+    border-radius: var(--radius);
+    transition: box-shadow 200ms ease, transform 160ms ease;
+}
+
+button:focus, a:focus, .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+}
+
+input, select, textarea {
+    border-radius: 8px;
+}
+
+.card, .container, .form-container {
+    transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.muted { color: #6b7280; }
