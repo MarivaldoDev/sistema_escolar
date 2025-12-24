@@ -140,7 +140,7 @@ def my_fouls(request, student_id: int):
         "subjects": subjects,
         "fouls": fouls_qs,
         "fouls_count": fouls_qs.count(),
-        "selected_subject": subject_pk or "",
+        "selected_subject": subject_pk or "", 
         "selected_month": month_str or "",
     }
 
@@ -148,7 +148,7 @@ def my_fouls(request, student_id: int):
 
 
 @login_required(login_url="login")
-@aluno_only
+#@aluno_only
 @aluno_required
 def list_notifications(request):
     unread_notifications = get_unread_notifications(request.user)

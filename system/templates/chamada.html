@@ -10,12 +10,13 @@
     <title>Chamada</title>
 </head>
 <body>
-    <header>
-        <h1>Fazer Chamada</h1>
-        <nav>
-            <a href="{% url 'turma_detail' team.id subject.id %}">Voltar</a>
-        </nav>
-    </header>
+        <header class="page-header">
+            <a href="{% url 'turma_detail' team.id subject.id %}" class="back-btn">←</a>
+            <div class="header-info">
+                <h1>Fazer Chamada</h1>
+                <p>Registrar presenças da turma</p>
+            </div>
+        </header>
     <div class="container">
         <h2>Chamada - {{ team.name }} / {{ subject.name }} ({% now "d/m/Y" %})</h2>
 

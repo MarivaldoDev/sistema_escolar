@@ -1,13 +1,42 @@
+/* GLOBAL IMPROVEMENTS: variables, reset and accessibility helpers */
+:root {
+    --accent: #2563eb;
+    --accent-600: #1e40af;
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --success: #27ae60;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+    --radius: 10px;
+    --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+    --shadow-md: 0 12px 40px rgba(16,24,40,0.10);
+}
+
+html { box-sizing: border-box; font-size: 16px; }
+*, *::before, *::after { box-sizing: inherit; margin: 0; padding: 0; }
+
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #111;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #111;
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+}
+
+img, svg { max-width: 100%; height: auto; display: block; }
+
+a:focus-visible, button:focus-visible, .btn:focus-visible { outline: 3px solid rgba(37,99,235,0.25); outline-offset: 2px; }
+
+.btn, button { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
 }
 
 .hidden {

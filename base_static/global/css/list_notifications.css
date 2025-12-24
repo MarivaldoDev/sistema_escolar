@@ -1,23 +1,46 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* GLOBAL IMPROVEMENTS: variables, reset and accessibility helpers */
+:root {
+  --accent: #2563eb;
+  --accent-600: #1e40af;
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --success: #27ae60;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --radius: 10px;
+  --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+  --shadow-md: 0 12px 40px rgba(16,24,40,0.10);
 }
 
-/* BASE */
+html { box-sizing: border-box; font-size: 16px; }
+*, *::before, *::after { box-sizing: inherit; margin: 0; padding: 0; }
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f9;
-  color: #333;
+  background: var(--bg);
+  color: var(--text);
   padding: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg { max-width: 100%; height: auto; display: block; }
+
+a:focus-visible, button:focus-visible, .btn:focus-visible { outline: 3px solid rgba(37,99,235,0.25); outline-offset: 2px; }
+
+.btn, button { cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }
 
 /* HEADER */
 .page-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -160,7 +183,7 @@ body {
   }
 
   .page-header {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     margin-bottom: 16px;
   }
@@ -225,16 +248,14 @@ body {
     padding: 8px;
   }
 
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+.header-info h1 {
+      font-size: 1.5rem;
   }
 
   .back-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
   }
 
   .header-info h1 {
