@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404, render
 from system.decorators.decorators import aluno_only, aluno_required
 from system.models import AttendanceRecord, CustomUser, Grade, Subject, Team
 from system.utiuls.functions import is_aproved
-from ..notifications import get_unread_notifications
 
+from ..notifications import get_unread_notifications
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +140,7 @@ def my_fouls(request, student_id: int):
         "subjects": subjects,
         "fouls": fouls_qs,
         "fouls_count": fouls_qs.count(),
-        "selected_subject": subject_pk or "", 
+        "selected_subject": subject_pk or "",
         "selected_month": month_str or "",
     }
 
@@ -157,7 +157,8 @@ def list_notifications(request):
     if first_notif and getattr(first_notif, "actor", None):
         subject_teacher = Subject.objects.filter(teachers=first_notif.actor).first()
 
-
     return render(
-        request, "list_notifications.html", {"notifications": unread_notifications, "subject": subject_teacher}
+        request,
+        "list_notifications.html",
+        {"notifications": unread_notifications, "subject": subject_teacher},
     )

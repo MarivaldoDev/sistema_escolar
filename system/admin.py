@@ -1,8 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import (Attendance, AttendanceRecord, Bimonthly, CustomUser,
-                     Grade, Subject, Team)
+from .models import (
+    Attendance,
+    AttendanceRecord,
+    Bimonthly,
+    CustomUser,
+    Grade,
+    Subject,
+    Team,
+)
 
 
 @admin.register(CustomUser)

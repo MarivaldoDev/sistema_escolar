@@ -260,6 +260,13 @@ footer {
 
   .acoes { flex-direction: column; align-items: stretch; }
   .btn { width: 100%; }
+
+  .top-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 150px;
+    margin-top: 20px;
+  }
 }
 
 @media (max-width: 600px) {

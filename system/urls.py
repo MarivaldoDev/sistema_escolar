@@ -56,7 +56,11 @@ urlpatterns = [
     path(
         "create_notification/", teacher_views.enviar_avisos, name="create_notification"
     ),
-    path("list_notifications/", student_views.list_notifications, name="list_notifications"),
+    path(
+        "list_notifications/",
+        student_views.list_notifications,
+        name="list_notifications",
+    ),
     path(
         "mark_notifications_as_read/",
         general_views.mark_notifications_as_read,

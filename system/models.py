@@ -3,8 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from .utiuls.functions import (generate_unique_registration_number,
-                               send_welcome_email)
+from .utiuls.functions import generate_unique_registration_number, send_welcome_email
 
 # senha_geral: Abc123@00
 

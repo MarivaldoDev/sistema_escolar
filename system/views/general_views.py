@@ -2,6 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -12,7 +13,6 @@ from ..forms import LoginForm
 from ..models import CustomUser, Grade, Team
 from ..notifications import get_unread_notifications
 from ..utiuls.functions import is_aproved
-from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,9 @@ def home(request):
             else 0
         )
         return render(
-            request, "home.html", {"unread_notifications_count": unread_notifications_count}
+            request,
+            "home.html",
+            {"unread_notifications_count": unread_notifications_count},
         )
     return render(request, "home.html")
 
@@ -123,6 +125,7 @@ def acesso_negado(request, mensagem: str):
     return HttpResponseForbidden(
         render(request, "acesso_negado.html", {"mensagem": mensagem})
     )
+
 
 @login_required(login_url="login")
 def mark_notifications_as_read(request):
