@@ -19,12 +19,9 @@ logger = logging.getLogger(__name__)
 
 @login_required(login_url="login")
 def home(request):
-    if request.user.role == "student":
-        unread_notifications_count = (
-            get_unread_notifications(request.user).count()
-            if request.user.is_authenticated
-            else 0
-        )
+    if request.user.role == "aluno":
+        unread_notifications_count = get_unread_notifications(request.user).count()
+
         return render(
             request,
             "home.html",
