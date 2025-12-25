@@ -12,19 +12,23 @@ from ..forms import LoginForm
 from ..models import CustomUser, Grade, Team
 from ..notifications import get_unread_notifications
 from ..utiuls.functions import is_aproved
+from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger(__name__)
 
 
+@login_required(login_url="login")
 def home(request):
-    unread_notifications_count = (
-        get_unread_notifications(request.user).count()
-        if request.user.is_authenticated
-        else 0
-    )
-    return render(
-        request, "home.html", {"unread_notifications_count": unread_notifications_count}
-    )
+    if request.user.role == "student":
+        unread_notifications_count = (
+            get_unread_notifications(request.user).count()
+            if request.user.is_authenticated
+            else 0
+        )
+        return render(
+            request, "home.html", {"unread_notifications_count": unread_notifications_count}
+        )
+    return render(request, "home.html")
 
 
 def my_login(request):
@@ -54,6 +58,7 @@ def my_login(request):
     return render(request, "login.html", {"form": form})
 
 
+@login_required(login_url="login")
 def my_logout(request):
     logout(request)
     logger.info("Usuário fez logout com sucesso")
@@ -113,12 +118,13 @@ def search(request):
     )
 
 
+@login_required(login_url="login")
 def acesso_negado(request, mensagem: str):
     return HttpResponseForbidden(
         render(request, "acesso_negado.html", {"mensagem": mensagem})
     )
 
-
+@login_required(login_url="login")
 def mark_notifications_as_read(request):
     Notification.objects.mark_all_as_read(recipient=request.user)
     return redirect(reverse("list_notifications"))

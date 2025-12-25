@@ -148,7 +148,6 @@ def my_fouls(request, student_id: int):
 
 
 @login_required(login_url="login")
-#@aluno_only
 @aluno_required
 def list_notifications(request):
     unread_notifications = get_unread_notifications(request.user)

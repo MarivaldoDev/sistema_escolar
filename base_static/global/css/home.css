@@ -33,11 +33,30 @@ header h1 {
     align-items: center;
 }
 
+.nav-menu img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+
+.nav-menu a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.voltar:hover{
+    transform: scale(1.08);
+}
+
 
 nav a {
     color: #fff;
     text-decoration: none;
-    margin-left: 0; /* spacing handled by .nav-menu gap */
+    margin-left: 0; 
     font-weight: 500;
 }
 
@@ -142,9 +161,6 @@ nav a:hover {
     background-color: #1e3c72;
 }
 
-/* ===========================
-   NOTIFICATION BADGE
-=========================== */
 
 .card.notification {
   position: relative;
@@ -156,7 +172,7 @@ nav a:hover {
   right: 14px;
   min-width: 22px;
   height: 22px;
-  background: #dc2626; /* vermelho institucional */
+  background: #dc2626; 
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -165,7 +181,7 @@ nav a:hover {
   align-items: center;
   justify-content: center;
   padding: 0 6px;
-  box-shadow: 0 0 0 2px #ffffff; /* separação do card */
+  box-shadow: 0 0 0 2px #ffffff; 
   z-index: 10;
 }
 
@@ -313,9 +329,14 @@ footer {
         padding: 10px 14px;
         font-size: 13px;
     }
+
+    .nav-menu img {
+        width: 22px;
+        height: 22px;
+    }
     footer {
-        font-size: 16px;
-        padding: 20px;
+        font-size: 14px;
+        padding: 10px;
     }
 }
 

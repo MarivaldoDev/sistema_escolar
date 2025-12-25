@@ -16,15 +16,8 @@ body {
 .page-header {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   margin-bottom: 24px;
-}
-
-.top-actions {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
 }
 
 .header-info h1 {
@@ -54,9 +47,13 @@ body {
     transform: scale(1.08);
 }
 
-/* ================================
-   Container da tabela
-================================ */
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 1000px;
+  margin-top: 50px;
+}
+
 .table-container {
   flex: 1;
   padding: 20px;
