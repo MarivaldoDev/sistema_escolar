@@ -6,6 +6,17 @@ from ...models import CustomUser
 
 @pytest.mark.django_db
 def test_view_home(client):
+    senha = "teste123"
+    aluno = CustomUser.objects.create_user(
+        first_name="Pedro",
+        last_name="Silva",
+        email="aluno@example.com",
+        registration_number="A1234567",
+        role="aluno",
+        password=senha,
+    )
+    client.force_login(aluno)
+
     response = client.get(reverse("home"))
 
     assert response.status_code == 200
@@ -87,7 +98,19 @@ def test_view_login_post_campo_vazio(client):
     assert response.context["form"].errors
 
 
+@pytest.mark.django_db
 def test_logout_view(client):
+    senha = "teste123"
+    aluno = CustomUser.objects.create_user(
+        first_name="Pedro",
+        last_name="Silva",
+        email="aluno@example.com",
+        registration_number="A1234567",
+        role="aluno",
+        password=senha,
+    )
+    client.force_login(aluno)
+
     response = client.get(reverse("logout"))
 
     assert response.status_code == 302
