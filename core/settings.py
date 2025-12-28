@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://schoolsystem-h8enfffngbg0are4.canadacentral-01.azurewebsites.net", "*"]
+ALLOWED_HOSTS = [".azurewebsites.net", "*"]
 
 log_dir = os.path.join(BASE_DIR, 'logs')
 os.makedirs(log_dir, exist_ok=True)
