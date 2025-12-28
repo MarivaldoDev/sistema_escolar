@@ -33,7 +33,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://13051a559125.ngrok-free.app",
 ]
 
-log_dir = os.path.join(os.path.dirname(__file__), 'logs')
+log_dir = os.path.join(BASE_DIR, 'logs')
 os.makedirs(log_dir, exist_ok=True)
 
 
