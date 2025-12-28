@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["schoolsystem-h8enfffngbg0are4.canadacentral-01.azurewebsites.net"]
+ALLOWED_HOSTS = ["schoolsystem-h8enfffngbg0are4.canadacentral-01.azurewebsites.net", ".azurewebsites.net"]
 CSRF_TRUSTED_ORIGINS = [
     "https://schoolsystem-h8enfffngbg0are4.scm.canadacentral-01.azurewebsites.net",
 ]
