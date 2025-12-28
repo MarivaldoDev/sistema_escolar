@@ -29,6 +29,9 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = [".azurewebsites.net", "*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://schoolsystem-h8enfffngbg0are4.scm.canadacentral-01.azurewebsites.net",
+]
 
 log_dir = os.path.join(BASE_DIR, 'logs')
 os.makedirs(log_dir, exist_ok=True)
