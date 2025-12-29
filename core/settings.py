@@ -27,18 +27,16 @@ SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+if DEBUG == False:
+    ALLOWED_HOSTS = ["schoolsystem-h8enfffngbg0are4.canadacentral-01.azurewebsites.net", ".azurewebsites.net"]
+    CSRF_TRUSTED_ORIGINS = [
+        "https://schoolsystem-h8enfffngbg0are4.scm.canadacentral-01.azurewebsites.net",
+    ]
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-ALLOWED_HOSTS = ["schoolsystem-h8enfffngbg0are4.canadacentral-01.azurewebsites.net", ".azurewebsites.net"]
-CSRF_TRUSTED_ORIGINS = [
-    "https://schoolsystem-h8enfffngbg0are4.scm.canadacentral-01.azurewebsites.net",
-]
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    log_dir = os.path.join(BASE_DIR, 'logs')
+    os.makedirs(log_dir, exist_ok=True)
 
-log_dir = os.path.join(BASE_DIR, 'logs')
-os.makedirs(log_dir, exist_ok=True)
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "jazzmin",

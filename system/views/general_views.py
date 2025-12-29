@@ -81,7 +81,7 @@ def search(request):
         subject_grades = grades.filter(subject=subject, team=team).order_by(
             "bimonthly__number"
         )
-        grade_values = [g.value for g in subject_grades]
+        grade_values = [g.average for g in subject_grades]
         bimonthlys = [str(g.bimonthly) for g in subject_grades]
         if len(bimonthlys) > max_bimonthlys:
             max_bimonthlys = len(bimonthlys)
